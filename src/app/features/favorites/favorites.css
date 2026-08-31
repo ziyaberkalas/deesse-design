@@ -1,0 +1,19 @@
+.favorites-page {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: var(--space-7) var(--space-5);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: var(--space-5);
+}
+
+.empty {
+  color: var(--color-text-muted);
+}
+
+.empty a {
+  font-weight: 600;
+}

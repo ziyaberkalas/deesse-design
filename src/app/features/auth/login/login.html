@@ -1,0 +1,47 @@
+<section class="auth-page">
+  <h1>Giriş Yap</h1>
+
+  @if (!configured) {
+    <p class="form-notice">
+      Üyelik sistemi henüz yapılandırılmadı. Site yöneticisinin Supabase bağlantı bilgilerini
+      girmesi gerekiyor.
+    </p>
+  }
+
+  @if (serverError(); as error) {
+    <p class="form-alert" role="alert">{{ error }}</p>
+  }
+
+  <form (submit)="$event.preventDefault(); onSubmit()" novalidate>
+    <div class="form-field">
+      <label for="login-email">E-posta</label>
+      <input id="login-email" type="email" autocomplete="email" [formField]="loginForm.email" />
+      @if (loginForm.email().touched() && loginForm.email().invalid()) {
+        @for (error of loginForm.email().errors(); track $index) {
+          <span class="field-error">{{ error.message }}</span>
+        }
+      }
+    </div>
+
+    <div class="form-field">
+      <label for="login-password">Şifre</label>
+      <input
+        id="login-password"
+        type="password"
+        autocomplete="current-password"
+        [formField]="loginForm.password"
+      />
+      @if (loginForm.password().touched() && loginForm.password().invalid()) {
+        @for (error of loginForm.password().errors(); track $index) {
+          <span class="field-error">{{ error.message }}</span>
+        }
+      }
+    </div>
+
+    <button type="submit" class="btn-primary" [disabled]="!canSubmit()">
+      {{ submitting() ? 'Giriş yapılıyor...' : 'Giriş Yap' }}
+    </button>
+  </form>
+
+  <p class="alt-action">Hesabınız yok mu? <a routerLink="/kayit">Kayıt olun</a></p>
+</section>

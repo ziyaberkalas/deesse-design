@@ -1,0 +1,44 @@
+.site-footer {
+  margin-top: var(--space-8);
+  background: var(--color-primary-dark);
+  color: #fff;
+  /* extra bottom padding keeps the İletişim column clear of the fixed floating WhatsApp bubble */
+  padding: var(--space-7) var(--space-5) calc(var(--space-5) + 4.5rem);
+}
+
+.content {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: var(--space-6);
+}
+
+.site-footer h2,
+.site-footer h3 {
+  color: #fff;
+}
+
+.site-footer p {
+  color: #ffffffcc;
+}
+
+.site-footer ul {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.site-footer a {
+  color: #fff;
+}
+
+.copyright {
+  max-width: var(--max-width);
+  margin: var(--space-7) auto 0;
+  padding-top: var(--space-4);
+  border-top: 1px solid #ffffff33;
+  font-size: 0.8125rem;
+  color: #ffffffb3;
+}

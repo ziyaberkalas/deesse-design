@@ -1,0 +1,52 @@
+<section class="hero">
+  <div class="hero-blobs" aria-hidden="true">
+    <span class="blob blob-1"></span>
+    <span class="blob blob-2"></span>
+    <span class="blob blob-3"></span>
+  </div>
+  <div class="hero-content">
+    <h1>El Yapımı Tasarım Çantalar</h1>
+    <p>{{ siteConfig.tagline }}. Her parça, {{ siteConfig.designer }} imzasıyla atölyemizde tek tek elde üretilir.</p>
+    <div class="hero-actions">
+      <a class="hero-cta" routerLink="/urunler">Koleksiyonu Keşfedin</a>
+      <a class="secondary-link" [href]="siteConfig.shopier.shopUrl" target="_blank" rel="noopener noreferrer">
+        Shopier Mağazamız
+      </a>
+    </div>
+  </div>
+</section>
+
+<section class="stats" aria-labelledby="stats-heading">
+  <h2 id="stats-heading" class="visually-hidden">Markamız hakkında</h2>
+  <dl class="stats-grid">
+    @for (stat of stats; track stat.label) {
+      <div class="stat" appScrollReveal>
+        <dt class="stat-value">{{ stat.value }}</dt>
+        <dd class="stat-label">{{ stat.label }}</dd>
+      </div>
+    }
+  </dl>
+</section>
+
+<section class="featured" aria-labelledby="featured-heading">
+  <h2 id="featured-heading" appScrollReveal>Öne Çıkan Modeller</h2>
+  <div class="grid">
+    @for (product of featuredProducts(); track product.id; let i = $index) {
+      <app-product-card [product]="product" [priority]="i === 0" />
+    }
+  </div>
+</section>
+
+<app-testimonial-marquee />
+
+<section class="instagram-teaser" aria-labelledby="instagram-heading">
+  <h2 id="instagram-heading">Instagram'da Biz</h2>
+  <div class="instagram-grid">
+    @for (post of instagramPosts; track post) {
+      <app-instagram-embed [postUrl]="post" />
+    }
+  </div>
+  <a class="secondary-link" [href]="siteConfig.instagram.url" target="_blank" rel="noopener noreferrer">
+    Tümünü Instagram'da Gör
+  </a>
+</section>

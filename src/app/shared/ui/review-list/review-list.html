@@ -1,0 +1,21 @@
+@if (reviews().length > 0) {
+  <ul class="review-list">
+    @for (review of reviews(); track review.id) {
+      <li class="review">
+        <div class="review-header">
+          <span class="author">
+            {{ review.author }}
+            @if (review.verified) {
+              <span class="verified-badge">Onaylı Satın Alma</span>
+            }
+          </span>
+          <app-star-rating [rating]="review.rating" />
+        </div>
+        <p class="comment">{{ review.comment }}</p>
+        <time class="date" [attr.datetime]="review.date">{{ review.date | date: 'longDate' }}</time>
+      </li>
+    }
+  </ul>
+} @else {
+  <p class="empty">Henüz değerlendirme yok.</p>
+}

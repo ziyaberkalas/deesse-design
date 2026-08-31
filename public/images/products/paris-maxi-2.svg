@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="1000" viewBox="0 0 800 1000" role="presentation">
+  <rect width="800" height="1000" fill="#efe9df"/>
+  <g opacity="0.35" stroke="#5f4a39" stroke-width="1.5" fill="none">
+    <circle cx="400" cy="470" r="250"/>
+    <circle cx="400" cy="470" r="310"/>
+  </g>
+  <!-- sap -->
+  <path d="M310 415 C310 300 490 300 490 415" fill="none" stroke="#5f4a39" stroke-width="16" stroke-linecap="round"/>
+  <!-- gövde -->
+  <path d="M250 410 h300 a26 26 0 0 1 26 26 l24 224 a30 30 0 0 1 -30 32 h-340 a30 30 0 0 1 -30 -32 l24 -224 a26 26 0 0 1 26 -26 z" fill="#82664c"/>
+  <!-- kapak -->
+  <path d="M224 410 h352 l10 92 a20 20 0 0 1 -20 22 h-332 a20 20 0 0 1 -20 -22 z" fill="#5f4a39" opacity="0.9"/>
+  <!-- kilit -->
+  <rect x="378" y="506" width="44" height="30" rx="7" fill="#efe9df" opacity="0.85"/>
+</svg>

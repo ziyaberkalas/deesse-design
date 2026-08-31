@@ -1,0 +1,123 @@
+<section class="admin-page">
+  <h1>Sipariş Yönetimi</h1>
+  <p class="intro">
+    Shopier'den gelen siparişleri buradan müşterinin hesabına ekleyin. Siparişi onayladığınızda
+    müşteri o ürüne "Onaylı Satın Alma" değerlendirmesi yazabilir hale gelir.
+  </p>
+
+  @if (errorMessage(); as error) {
+    <p class="form-alert" role="alert">{{ error }}</p>
+  }
+  @if (successMessage(); as message) {
+    <p class="form-notice" role="status">{{ message }}</p>
+  }
+
+  <section class="panel" aria-labelledby="new-order-heading">
+    <h2 id="new-order-heading">Yeni Sipariş Kaydet</h2>
+
+    <div class="form-field">
+      <label for="customer-search">Müşteri ara (telefon veya ad)</label>
+      <div class="search-row">
+        <input
+          id="customer-search"
+          type="search"
+          [value]="customerQuery()"
+          (input)="onQueryInput($event)"
+          (keydown.enter)="$event.preventDefault(); searchCustomers()"
+        />
+        <button type="button" class="btn-secondary" (click)="searchCustomers()" [disabled]="searching()">
+          {{ searching() ? 'Aranıyor...' : 'Ara' }}
+        </button>
+      </div>
+      <span class="hint">Müşterinin önce siteye kayıt olmuş olması gerekir.</span>
+    </div>
+
+    @if (customerResults().length > 0) {
+      <ul class="customer-results">
+        @for (customer of customerResults(); track customer.id) {
+          <li>
+            <button type="button" class="customer-option" (click)="selectCustomer(customer)">
+              <span class="customer-name">{{ customer.display_name ?? 'İsimsiz' }}</span>
+              <span class="customer-phone">{{ customer.phone ?? '—' }}</span>
+            </button>
+          </li>
+        }
+      </ul>
+    }
+
+    @if (selectedCustomer(); as customer) {
+      <p class="selected-customer" role="status">
+        Seçili müşteri: <strong>{{ customer.display_name ?? 'İsimsiz' }}</strong> ({{ customer.phone ?? '—' }})
+      </p>
+
+      <div class="form-field">
+        <label for="order-product">Ürün</label>
+        <select id="order-product" [value]="selectedProductId()" (change)="onProductChange($event)">
+          <option value="">Ürün seçin...</option>
+          @for (product of products(); track product.id) {
+            <option [value]="product.id">{{ product.name }}</option>
+          }
+        </select>
+      </div>
+
+      <button type="button" class="btn-primary" (click)="createOrder()" [disabled]="!canCreate()">
+        {{ saving() ? 'Kaydediliyor...' : 'Siparişi Kaydet' }}
+      </button>
+    }
+  </section>
+
+  <section class="panel" aria-labelledby="all-orders-heading">
+    <h2 id="all-orders-heading">Tüm Siparişler</h2>
+
+    @if (ordersResource.isLoading()) {
+      <p class="muted" role="status">Siparişler yükleniyor...</p>
+    } @else if (ordersResource.error()) {
+      <p class="form-alert" role="alert">Siparişler yüklenemedi.</p>
+    } @else if (ordersResource.value()?.length) {
+      <div class="table-scroll">
+        <table>
+          <caption class="visually-hidden">Kayıtlı tüm siparişler ve durumları</caption>
+          <thead>
+            <tr>
+              <th scope="col">Müşteri</th>
+              <th scope="col">Telefon</th>
+              <th scope="col">Ürün</th>
+              <th scope="col">Tarih</th>
+              <th scope="col">Durum</th>
+              <th scope="col">İşlem</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (order of ordersResource.value(); track order.id) {
+              <tr>
+                <td>{{ order.profiles?.display_name ?? 'İsimsiz' }}</td>
+                <td>{{ order.profiles?.phone ?? '—' }}</td>
+                <td>{{ order.product_name }}</td>
+                <td>{{ order.created_at | date: 'short' }}</td>
+                <td>
+                  <span class="status" [class]="'status-' + order.status">{{ statusLabel(order.status) }}</span>
+                </td>
+                <td>
+                  @if (order.status === 'pending') {
+                    <button
+                      type="button"
+                      class="btn-secondary"
+                      (click)="confirmOrder(order.id)"
+                      [attr.aria-label]="order.product_name + ' siparişini onayla'"
+                    >
+                      Onayla
+                    </button>
+                  } @else {
+                    <span class="muted">—</span>
+                  }
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    } @else {
+      <p class="muted">Henüz kayıtlı sipariş yok.</p>
+    }
+  </section>
+</section>

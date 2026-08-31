@@ -1,0 +1,28 @@
+@if (reviews().length > 0) {
+  <section class="testimonials" aria-labelledby="testimonials-heading">
+    <h2 id="testimonials-heading">Müşterilerimiz Ne Diyor?</h2>
+
+    <div class="marquee-viewport">
+      <div class="marquee-track">
+        <div class="marquee-set">
+          @for (review of reviews(); track review.id + review.productId) {
+            <a class="quote-card" [routerLink]="['/urunler', review.productId]">
+              <app-star-rating [rating]="review.rating" />
+              <p class="comment">{{ review.comment }}</p>
+              <p class="meta"><span class="author">{{ review.author }}</span> · {{ review.productName }}</p>
+            </a>
+          }
+        </div>
+        <div class="marquee-set marquee-set--clone" aria-hidden="true">
+          @for (review of reviews(); track review.id + review.productId) {
+            <a class="quote-card" [routerLink]="['/urunler', review.productId]" tabindex="-1">
+              <app-star-rating [rating]="review.rating" />
+              <p class="comment">{{ review.comment }}</p>
+              <p class="meta"><span class="author">{{ review.author }}</span> · {{ review.productName }}</p>
+            </a>
+          }
+        </div>
+      </div>
+    </div>
+  </section>
+}

@@ -1,0 +1,80 @@
+<section class="auth-page">
+  <h1>Kayıt Ol</h1>
+
+  @if (!configured) {
+    <p class="form-notice">
+      Üyelik sistemi henüz yapılandırılmadı. Site yöneticisinin Supabase bağlantı bilgilerini
+      girmesi gerekiyor.
+    </p>
+  }
+
+  @if (needsEmailConfirmation()) {
+    <p class="form-notice" role="status">
+      Kaydınız alındı. Girişi tamamlamak için e-posta adresinize gönderdiğimiz onay bağlantısına
+      tıklayın, ardından <a routerLink="/giris">giriş yapabilirsiniz</a>.
+    </p>
+  } @else {
+    <p class="intro">
+      Sipariş geçmişinizi görebilmek ve satın aldığınız ürünlere değerlendirme yazabilmek için
+      üye olun. Satın alma işlemleri Shopier mağazamızdan yapılmaya devam eder.
+    </p>
+
+    @if (serverError(); as error) {
+      <p class="form-alert" role="alert">{{ error }}</p>
+    }
+
+    <form (submit)="$event.preventDefault(); onSubmit()" novalidate>
+      <div class="form-field">
+        <label for="signup-name">Ad Soyad</label>
+        <input id="signup-name" type="text" autocomplete="name" [formField]="signupForm.displayName" />
+        @if (signupForm.displayName().touched() && signupForm.displayName().invalid()) {
+          @for (error of signupForm.displayName().errors(); track $index) {
+            <span class="field-error">{{ error.message }}</span>
+          }
+        }
+      </div>
+
+      <div class="form-field">
+        <label for="signup-phone">Telefon (WhatsApp)</label>
+        <input id="signup-phone" type="tel" autocomplete="tel" [formField]="signupForm.phone" />
+        <span class="hint">Siparişlerinizi hesabınızla eşleştirebilmemiz için WhatsApp numaranız.</span>
+        @if (signupForm.phone().touched() && signupForm.phone().invalid()) {
+          @for (error of signupForm.phone().errors(); track $index) {
+            <span class="field-error">{{ error.message }}</span>
+          }
+        }
+      </div>
+
+      <div class="form-field">
+        <label for="signup-email">E-posta</label>
+        <input id="signup-email" type="email" autocomplete="email" [formField]="signupForm.email" />
+        @if (signupForm.email().touched() && signupForm.email().invalid()) {
+          @for (error of signupForm.email().errors(); track $index) {
+            <span class="field-error">{{ error.message }}</span>
+          }
+        }
+      </div>
+
+      <div class="form-field">
+        <label for="signup-password">Şifre</label>
+        <input
+          id="signup-password"
+          type="password"
+          autocomplete="new-password"
+          [formField]="signupForm.password"
+        />
+        @if (signupForm.password().touched() && signupForm.password().invalid()) {
+          @for (error of signupForm.password().errors(); track $index) {
+            <span class="field-error">{{ error.message }}</span>
+          }
+        }
+      </div>
+
+      <button type="submit" class="btn-primary" [disabled]="!canSubmit()">
+        {{ submitting() ? 'Kaydediliyor...' : 'Kayıt Ol' }}
+      </button>
+    </form>
+
+    <p class="alt-action">Zaten üye misiniz? <a routerLink="/giris">Giriş yapın</a></p>
+  }
+</section>

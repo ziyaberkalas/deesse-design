@@ -1,1 +1,389 @@
 /* You can add global styles to this file, and also import other style files */
+
+:root {
+  /* Déesse Design -- "timeless elegance", el yapımı deri aksesuar. Sıcak fildişi + konyak + yumuşak altın.
+     Tüm oranlar gerçek WCAG bağıl parlaklık formülüyle hesaplandı. */
+  --color-bg: #faf7f2;
+  --color-surface: #ffffff;
+  --color-text: #2b2320;
+  --color-text-muted: #6b5f55;
+  --color-border: #e5ddd3;
+
+  /* Konyak: beyaz metin taşıyan dolgu rengi (buton, çip, footer).
+     primary vs #fff = 5.58:1, primary-dark vs #fff = 8.22:1. */
+  --color-primary: #8b5e3c;
+  --color-primary-dark: #6f4526;
+  --color-primary-contrast: #ffffff;
+
+  /* Yumuşak altın: koyu zemin/dekoratif kullanım için. Koyu metne karşı 6.36:1 ama beyaza karşı
+     yalnızca 2.42:1 -- açık zeminde metin veya tek başına durum kenarlığı olarak ASLA kullanılmaz. */
+  --color-accent: #c9a227;
+  /* Sıcak taba: yalnızca dekoratif gradient durağı, hiçbir zaman metin rengi değil. */
+  --color-accent-warm: #b07d4a;
+  /* Derin kakao: metnin altına gelen gradientlerin güvenli çıpası (beyaza karşı 15.9:1). */
+  --color-ink: #241a14;
+
+  --color-whatsapp: #0e6e3a;
+  --color-whatsapp-dark: #0a5c31;
+  --color-whatsapp-contrast: #ffffff;
+
+  /* "Onaylı Satın Alma" rozeti gibi doğrulama göstergeleri. WhatsApp token'larıyla aynı yeşil ama
+     ayrı bir token: rozet bir kanala değil, doğrulanmışlık anlamına işaret ediyor. Beyaza karşı 6.34:1. */
+  --color-success: #0e6e3a;
+  --color-success-contrast: #ffffff;
+
+  --color-danger: #a3253a;
+
+  /* Every stop independently >=5.6:1 vs white -- safe as a background behind white text. */
+  --gradient-safe: linear-gradient(135deg, var(--color-ink) 0%, var(--color-primary-dark) 50%, var(--color-primary) 100%);
+  /* Decorative only (card glow, badges) -- never place text on/clipped to this. */
+  --gradient-vivid: linear-gradient(135deg, var(--color-primary) 0%, var(--color-accent-warm) 55%, var(--color-accent) 100%);
+
+  /* Theme-adaptive accent used as TEXT/border directly on the page bg or a card surface (links,
+     active nav, category labels, stat numbers). Separate from --color-primary/-dark, which stay
+     constant fill-with-white-text backgrounds (footer, chips, blobs) across both themes -- a
+     single token can't serve both roles once dark mode exists, because "dark enough for white
+     text on top" and "bright enough to read on a dark page" pull in opposite directions.
+     Light default here matches --color-primary-dark (7.69:1 vs bg, 8.22:1 vs surface). */
+  --color-accent-text: var(--color-primary-dark);
+  --color-focus-ring: var(--color-primary-dark);
+  --header-glass-bg: rgba(250, 247, 242, 0.85);
+  --header-glass-bg-scrolled: rgba(250, 247, 242, 0.96);
+
+  /* Cormorant Garamond: yüksek kontrastlı, zamansız serif -- markanın "déesse" ruhuna uygun.
+     latin-ext alt kümesi doğrulandı (ğ/ı/ş için gerekli). Gövde Manrope olarak kalıyor. */
+  --font-heading: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
+  --font-body: 'Manrope', 'Segoe UI', system-ui, -apple-system, Roboto, Arial, sans-serif;
+
+  --text-hero: clamp(2.5rem, 5vw + 1rem, 4.5rem);
+  --text-h1: clamp(2rem, 3vw + 1rem, 3rem);
+  --text-h2: clamp(1.5rem, 2vw + 0.8rem, 2.25rem);
+  --text-h3: clamp(1.125rem, 1vw + 0.7rem, 1.5rem);
+
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 3rem;
+  --space-8: 4rem;
+
+  --radius-sm: 0.375rem;
+  --radius-md: 0.75rem;
+  --radius-lg: 1.25rem;
+
+  --shadow-sm: 0 1px 3px rgba(43, 35, 32, 0.08);
+  --shadow-md: 0 6px 20px rgba(43, 35, 32, 0.12);
+
+  --max-width: 1180px;
+
+  color-scheme: light;
+}
+
+/* Dark theme: auto-follows the OS unless the user has explicitly picked a theme (ThemeService
+   sets [data-theme] on <html> and persists the choice to localStorage; no attribute = "system").
+   Every dark value below was checked with the real WCAG relative-luminance formula. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    --color-bg: #1a1512;
+    --color-surface: #262019;
+    --color-text: #f5efe7;
+    --color-text-muted: #b5a899;
+    --color-border: #3f352c;
+    --color-danger: #ff8a80;
+    /* Sıcak altın: düz bg'ye karşı 9.81:1, düz surface'a karşı 8.73:1. Minimumun epey üstünde
+       tutuldu -- axe-core'un piksel örnekleyen kontrast kontrolü, saydam header'ın (backdrop-filter
+       + saturate) arkasından sızan içeriğin sınırda kalan bir rengi 4.5:1'in altına düşürdüğünü
+       yakalamıştı. Burada düz zemin minimumu değil, gerçek pay gerekiyor. */
+    --color-accent-text: #e0b978;
+    /* Altın koyu yüzeylerde net okunur (7.48:1); --color-primary-dark koyu-üstüne-koyu kalırdı. */
+    --color-focus-ring: var(--color-accent);
+    /* Koyu temada tamamen opak -- saydamlık, "sticky header'ın arkasında ne varsa" demek ve bu
+       sayfaya/scroll konumuna göre değişiyor. Rengi oynatmak yakınsamamış, her seferinde başka bir
+       sayfayı bozmuştu; opaklık değişkeni tamamen ortadan kaldırıyor. */
+    --header-glass-bg: rgb(38, 32, 25);
+    --header-glass-bg-scrolled: rgb(38, 32, 25);
+    color-scheme: dark;
+  }
+}
+
+:root[data-theme='dark'] {
+  --color-bg: #1a1512;
+  --color-surface: #262019;
+  --color-text: #f5efe7;
+  --color-text-muted: #b5a899;
+  --color-border: #3f352c;
+  --color-danger: #ff8a80;
+  --color-accent-text: #e0b978;
+  --color-focus-ring: var(--color-accent);
+  --header-glass-bg: rgb(38, 32, 25);
+  --header-glass-bg-scrolled: rgb(38, 32, 25);
+  color-scheme: dark;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-body);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  transition: background-color 0.25s ease, color 0.25s ease;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-heading);
+  color: var(--color-text);
+  line-height: 1.15;
+  margin: 0 0 var(--space-3);
+}
+
+/* Serif başlıklarda 900 kaba durur; Cormorant zaten yüksek kontrastlı olduğu için 600-700 yeterli. */
+h1 {
+  font-weight: 700;
+}
+
+h2 {
+  font-weight: 600;
+}
+
+h3 {
+  font-weight: 600;
+}
+
+h4 {
+  font-weight: 500;
+}
+
+p {
+  margin: 0 0 var(--space-3);
+}
+
+a {
+  color: var(--color-accent-text);
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+button {
+  font-family: inherit;
+}
+
+ul {
+  margin: 0;
+  padding: 0;
+}
+
+/* Visible, high-contrast focus ring everywhere; never remove without replacing */
+:focus-visible {
+  outline: 3px solid var(--color-focus-ring);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+.skip-link {
+  position: absolute;
+  left: var(--space-3);
+  top: -3rem;
+  background: var(--color-primary-dark);
+  color: #fff;
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-sm);
+  z-index: 1000;
+  transition: top 0.2s ease;
+  text-decoration: none;
+}
+
+.skip-link:focus {
+  top: var(--space-3);
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ---- Form primitives shared by login/signup/review/admin (keeps per-component budgets small) ---- */
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  margin-bottom: var(--space-4);
+}
+
+.form-field label {
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.form-field input,
+.form-field textarea,
+.form-field select {
+  padding: var(--space-3);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface);
+  color: var(--color-text);
+  font-family: inherit;
+  font-size: 1rem;
+}
+
+.form-field textarea {
+  min-height: 7rem;
+  resize: vertical;
+}
+
+.form-field input[aria-invalid='true'],
+.form-field textarea[aria-invalid='true'] {
+  border-color: var(--color-danger);
+}
+
+.field-error {
+  color: var(--color-danger);
+  font-size: 0.8125rem;
+}
+
+/* Form gönderimi sonrası dönen sunucu/RLS hatası. role="alert" ile birlikte kullanılmalı. */
+.form-alert {
+  padding: var(--space-3) var(--space-4);
+  border: 1px solid var(--color-danger);
+  border-radius: var(--radius-sm);
+  color: var(--color-danger);
+  margin-bottom: var(--space-4);
+}
+
+.form-notice {
+  padding: var(--space-3) var(--space-4);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface);
+  margin-bottom: var(--space-4);
+}
+
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  background: var(--color-primary);
+  color: var(--color-primary-contrast);
+  border: 1px solid var(--color-primary);
+  font-family: inherit;
+  font-weight: 600;
+  font-size: 1rem;
+  padding: var(--space-3) var(--space-5);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: var(--color-primary-dark);
+  border-color: var(--color-primary-dark);
+}
+
+.btn-primary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  background: var(--color-surface);
+  color: var(--color-text);
+  border: 1px solid var(--color-border);
+  font-family: inherit;
+  font-weight: 600;
+  font-size: 0.9375rem;
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+}
+
+.btn-secondary:hover:not(:disabled) {
+  border-color: var(--color-accent-text);
+  color: var(--color-accent-text);
+}
+
+/* ---- Motion primitives shared by >=2 components (keeps per-component style budgets small) ---- */
+
+@keyframes blob-drift {
+  0% {
+    transform: translate(0, 0) scale(1);
+  }
+  50% {
+    transform: translate(var(--drift-x, 4%), var(--drift-y, -4%)) scale(1.08);
+  }
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+}
+
+@keyframes pulse-glow {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(139, 94, 60, 0.45);
+  }
+  50% {
+    box-shadow: 0 0 0 12px rgba(139, 94, 60, 0);
+  }
+}
+
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  /* View Transition pseudo-elements live outside the normal tree; the `*` rule above doesn't reach them. */
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
+  }
+}

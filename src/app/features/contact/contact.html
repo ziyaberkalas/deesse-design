@@ -1,0 +1,36 @@
+<section class="contact-page">
+  <h1>İletişim</h1>
+  <p>
+    Koleksiyonumuz, ürünlerimiz veya siparişiniz hakkında merak ettikleriniz için bize yazın.
+    En hızlı yanıtı WhatsApp üzerinden alırsınız. Satın alma işlemleri Shopier mağazamızdan yapılır.
+  </p>
+
+  <app-whatsapp-cta-button />
+
+  <dl class="details">
+    <div class="detail-row">
+      <dt>Telefon</dt>
+      <dd>{{ siteConfig.whatsapp.phoneDisplay }}</dd>
+    </div>
+    <div class="detail-row">
+      <dt>E-posta</dt>
+      <dd><a [href]="'mailto:' + siteConfig.contactEmail">{{ siteConfig.contactEmail }}</a></dd>
+    </div>
+    <div class="detail-row">
+      <dt>Instagram</dt>
+      <dd>
+        <a [href]="siteConfig.instagram.url" target="_blank" rel="noopener noreferrer">
+          {{ siteConfig.instagram.handle }}
+        </a>
+      </dd>
+    </div>
+    <div class="detail-row">
+      <dt>Mağaza</dt>
+      <dd>
+        <a [href]="siteConfig.shopier.shopUrl" target="_blank" rel="noopener noreferrer">
+          Shopier'de satın alın
+        </a>
+      </dd>
+    </div>
+  </dl>
+</section>

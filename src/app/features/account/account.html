@@ -1,0 +1,51 @@
+<section class="account-page">
+  <header class="account-header">
+    <div>
+      <h1>Hesabım</h1>
+      <p class="greeting">Merhaba, {{ displayName() }}</p>
+    </div>
+    <button type="button" class="btn-secondary" (click)="signOut()">Çıkış Yap</button>
+  </header>
+
+  @if (isAdmin()) {
+    <p class="form-notice">
+      Yönetici hesabıyla giriş yaptınız.
+      <a routerLink="/yonetim/siparisler">Sipariş yönetimine gidin</a>
+    </p>
+  }
+
+  <h2>Siparişlerim</h2>
+
+  @if (ordersResource.isLoading()) {
+    <p class="muted" role="status">Siparişleriniz yükleniyor...</p>
+  } @else if (ordersResource.error()) {
+    <p class="form-alert" role="alert">
+      Siparişleriniz yüklenemedi. Bağlantınızı kontrol edip sayfayı yenileyin.
+    </p>
+  } @else if (ordersResource.value()?.length) {
+    <ul class="order-list">
+      @for (order of ordersResource.value(); track order.id) {
+        <li class="order">
+          <div class="order-main">
+            <a class="order-product" [routerLink]="['/urunler', order.product_id]">{{ order.product_name }}</a>
+            <time class="order-date" [attr.datetime]="order.created_at">
+              {{ order.created_at | date: 'longDate' }}
+            </time>
+          </div>
+          <span class="status" [class]="'status-' + order.status">{{ statusLabel(order.status) }}</span>
+        </li>
+      }
+    </ul>
+    <p class="muted note">
+      Onaylanan siparişleriniz için ilgili ürün sayfasından değerlendirme yazabilirsiniz.
+    </p>
+  } @else {
+    <div class="empty">
+      <p>Henüz kayıtlı siparişiniz yok.</p>
+      <p class="muted">
+        Shopier'den verdiğiniz siparişler, hazırlandıktan sonra atölyemiz tarafından hesabınıza
+        işlenir. <a routerLink="/urunler">Koleksiyona göz atın</a>
+      </p>
+    </div>
+  }
+</section>

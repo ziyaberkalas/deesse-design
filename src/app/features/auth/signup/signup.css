@@ -1,0 +1,20 @@
+.auth-page {
+  max-width: 26rem;
+  margin: 0 auto;
+  padding: var(--space-7) var(--space-5);
+}
+
+.intro {
+  color: var(--color-text-muted);
+  margin-bottom: var(--space-5);
+}
+
+.hint {
+  font-size: 0.8125rem;
+  color: var(--color-text-muted);
+}
+
+.alt-action {
+  margin-top: var(--space-5);
+  color: var(--color-text-muted);
+}

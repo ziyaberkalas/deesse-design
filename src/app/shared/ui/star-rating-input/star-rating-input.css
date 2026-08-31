@@ -1,0 +1,56 @@
+.star-input {
+  border: none;
+  padding: 0;
+  margin: 0;
+  min-inline-size: 0;
+}
+
+.star-input legend {
+  padding: 0;
+  margin-bottom: var(--space-2);
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.options {
+  display: flex;
+  gap: var(--space-1);
+}
+
+.star-option {
+  cursor: pointer;
+  line-height: 1;
+  border-radius: var(--radius-sm);
+}
+
+/* Radio görsel olarak gizlenir ama odaklanabilir kalır -- klavye ve ekran okuyucu semantiği korunur. */
+.star-option input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  margin: 0;
+  pointer-events: none;
+}
+
+.glyph {
+  display: block;
+  font-size: 1.75rem;
+  color: var(--color-border);
+  transition: color 0.15s ease, transform 0.15s ease;
+}
+
+.star-option.filled .glyph {
+  color: var(--color-accent);
+}
+
+.star-option:hover .glyph {
+  transform: scale(1.12);
+}
+
+/* Gizli radio odaklandığında görünür halka etiketin üzerinde gösterilir. */
+.star-option:has(input:focus-visible) {
+  outline: 3px solid var(--color-focus-ring);
+  outline-offset: 2px;
+}

@@ -1,0 +1,56 @@
+.review-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.review {
+  padding: var(--space-4);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+}
+
+.review-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  margin-bottom: var(--space-2);
+}
+
+.author {
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+/* Yeşil, "doğrulanmış" anlamının yerleşik karşılığı -- kanaldan bağımsız semantik token. */
+.verified-badge {
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  padding: 0.15rem var(--space-2);
+  border-radius: var(--radius-sm);
+  background: var(--color-success);
+  color: var(--color-success-contrast);
+  white-space: nowrap;
+}
+
+.comment {
+  margin: 0 0 var(--space-2);
+  color: var(--color-text);
+}
+
+.date {
+  font-size: 0.8125rem;
+  color: var(--color-text-muted);
+}
+
+.empty {
+  color: var(--color-text-muted);
+  font-style: italic;
+}

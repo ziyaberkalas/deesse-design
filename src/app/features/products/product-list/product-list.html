@@ -1,0 +1,47 @@
+<section class="product-list-page">
+  <h1>Ürünler</h1>
+
+  <div class="toolbar">
+    <div class="search-field">
+      <label class="visually-hidden" for="product-search">Ürün ara</label>
+      <input
+        id="product-search"
+        type="search"
+        placeholder="Ürün adı veya açıklamada ara..."
+        [value]="searchQuery()"
+        (input)="onSearchInput($event)"
+      />
+    </div>
+  </div>
+
+  <div class="filters" role="group" aria-label="Kategoriye göre filtrele">
+    <button
+      type="button"
+      class="filter-chip"
+      [attr.aria-pressed]="selectedCategory() === null"
+      (click)="selectCategory(null)"
+    >
+      Tümü
+    </button>
+    @for (category of categories(); track category.id) {
+      <button
+        type="button"
+        class="filter-chip"
+        [attr.aria-pressed]="selectedCategory() === category.id"
+        (click)="selectCategory(category.id)"
+      >
+        {{ category.label }}
+      </button>
+    }
+  </div>
+
+  @if (filteredProducts().length > 0) {
+    <div class="grid" appScrollReveal>
+      @for (product of filteredProducts(); track product.id; let i = $index) {
+        <app-product-card [product]="product" [priority]="i === 0" />
+      }
+    </div>
+  } @else {
+    <p class="empty">Aramanıza veya seçtiğiniz filtrelere uyan ürün bulunamadı.</p>
+  }
+</section>

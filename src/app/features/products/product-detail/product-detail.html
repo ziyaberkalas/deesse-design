@@ -1,0 +1,132 @@
+@if (product(); as p) {
+  <article class="product-detail">
+    <div class="gallery">
+      <img
+        class="main-image"
+        [ngSrc]="p.images[selectedImageIndex()].url"
+        [alt]="p.images[selectedImageIndex()].alt"
+        width="800"
+        height="1000"
+        priority
+      />
+      @if (p.images.length > 1) {
+        <div class="thumbs" role="group" aria-label="Ürün görselleri">
+          @for (image of p.images; track image.url; let i = $index) {
+            <button
+              type="button"
+              class="thumb-btn"
+              [attr.aria-current]="i === selectedImageIndex()"
+              [attr.aria-label]="'Görsel ' + (i + 1)"
+              (click)="selectImage(i)"
+            >
+              <img [ngSrc]="image.url" [alt]="''" width="800" height="1000" />
+            </button>
+          }
+        </div>
+      }
+    </div>
+
+    <div class="info">
+      <span class="category">{{ categoryLabel() }}</span>
+      <h1>{{ p.name }}</h1>
+      <app-star-rating [rating]="averageRating()" [reviewCount]="p.reviews.length" />
+      <p class="price">
+        @if (p.price !== null) {
+          {{ p.price | currency: 'TRY' : 'symbol' : '1.0-0' }}
+        } @else {
+          Fiyat için iletişime geçin
+        }
+      </p>
+      <p class="description">{{ p.description }}</p>
+
+      <div class="actions">
+        <app-shopier-buy-button [product]="p" />
+        <button
+          type="button"
+          class="favorite-toggle"
+          [class.active]="isFavorite()"
+          (click)="toggleFavorite()"
+          [attr.aria-pressed]="isFavorite()"
+        >
+          <svg aria-hidden="true" viewBox="0 0 24 24" width="18" height="18" [attr.fill]="isFavorite() ? 'currentColor' : 'none'" stroke="currentColor" stroke-width="2">
+            <path
+              d="M12 21s-6.7-4.35-9.3-8.1C1 10.3 1.6 6.9 4.3 5.4c2.3-1.3 5-0.6 6.4 1.4l1.3 1.8 1.3-1.8c1.4-2 4.1-2.7 6.4-1.4 2.7 1.5 3.3 4.9 1.6 7.5C18.7 16.65 12 21 12 21Z"
+            />
+          </svg>
+          {{ isFavorite() ? 'Favorilerde' : 'Favorilere Ekle' }}
+        </button>
+      </div>
+
+      <p class="custom-note">
+        Her parça atölyemizde elde üretilir; bu nedenle küçük doku ve ton farklılıkları olabilir.
+        Sorularınız için WhatsApp üzerinden bize yazabilirsiniz.
+      </p>
+    </div>
+
+    <section class="reviews" aria-labelledby="reviews-heading">
+      <h2 id="reviews-heading">Değerlendirmeler</h2>
+      <app-review-list [reviews]="mergedReviews()" />
+
+      <div class="review-form-section">
+        @if (!auth.ready()) {
+          <!-- oturum durumu netleşene kadar yanlış mesaj göstermemek için sessiz kalınır -->
+        } @else if (!auth.isLoggedIn()) {
+          <p class="review-prompt">
+            Bu ürünü satın aldıysanız değerlendirme yazabilirsiniz.
+            <a [routerLink]="['/giris']" [queryParams]="{ redirect: '/urunler/' + p.id }">Giriş yapın</a>
+            veya <a routerLink="/kayit">üye olun</a>.
+          </p>
+        } @else if (eligibilityResource.isLoading()) {
+          <p class="review-prompt" role="status">Değerlendirme hakkınız kontrol ediliyor...</p>
+        } @else if (eligibility(); as state) {
+          @switch (state.status) {
+            @case ('no-confirmed-order') {
+              <p class="review-prompt">
+                Değerlendirme yazabilmek için bu ürünü satın almış olmanız gerekir. Siparişiniz
+                hazırlandığında hesabınıza işlenir ve burada yorum yazabilirsiniz.
+              </p>
+            }
+            @case ('already-reviewed') {
+              <p class="review-prompt">Bu ürün için değerlendirmenizi paylaştınız, teşekkürler!</p>
+            }
+            @case ('eligible') {
+              <h3 class="review-form-heading">Değerlendirmenizi Yazın</h3>
+
+              @if (submitError(); as error) {
+                <p class="form-alert" role="alert">{{ error }}</p>
+              }
+
+              <form (submit)="$event.preventDefault(); submitReview(state.orderId)" novalidate>
+                <app-star-rating-input
+                  [rating]="reviewModel().rating"
+                  (ratingChange)="setRating($event)"
+                  name="review-rating"
+                />
+
+                <div class="form-field">
+                  <label for="review-comment">Yorumunuz</label>
+                  <textarea id="review-comment" [formField]="reviewForm.comment"></textarea>
+                  @if (reviewForm.comment().touched() && reviewForm.comment().invalid()) {
+                    @for (error of reviewForm.comment().errors(); track $index) {
+                      <span class="field-error">{{ error.message }}</span>
+                    }
+                  }
+                </div>
+
+                <button type="submit" class="btn-primary" [disabled]="!canSubmitReview()">
+                  {{ submitting() ? 'Gönderiliyor...' : 'Değerlendirmeyi Gönder' }}
+                </button>
+              </form>
+            }
+          }
+        }
+      </div>
+    </section>
+  </article>
+} @else {
+  <div class="not-found">
+    <h1>Ürün bulunamadı</h1>
+    <p>Aradığınız ürün mevcut değil ya da kaldırılmış olabilir.</p>
+    <a routerLink="/urunler">Tüm ürünlere göz atın</a>
+  </div>
+}
