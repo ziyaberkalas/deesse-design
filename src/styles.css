@@ -18,6 +18,9 @@
   /* Yumuşak altın: koyu zemin/dekoratif kullanım için. Koyu metne karşı 6.36:1 ama beyaza karşı
      yalnızca 2.42:1 -- açık zeminde metin veya tek başına durum kenarlığı olarak ASLA kullanılmaz. */
   --color-accent: #c9a227;
+  /* Altın zemin üstündeki metin. BİLEREK sabit (temaya göre değişmez): --color-text kullanılsaydı
+     koyu temada açık metin altın üstünde 2.42:1 kalırdı. Bu değerle iki temada da 6.36:1. */
+  --color-accent-contrast: #2b2320;
   /* Sıcak taba: yalnızca dekoratif gradient durağı, hiçbir zaman metin rengi değil. */
   --color-accent-warm: #b07d4a;
   /* Derin kakao: metnin altına gelen gradientlerin güvenli çıpası (beyaza karşı 15.9:1). */
@@ -33,6 +36,10 @@
   --color-success-contrast: #ffffff;
 
   --color-danger: #a3253a;
+  /* danger zemin üstündeki metin. Tema ile birlikte DEĞİŞİR: açık temada koyu kırmızı zemine
+     beyaz (7.28:1), koyu temada açık mercan zemine koyu metin (7.93:1). Sabit beyaz olsaydı
+     koyu temada 2.28:1'e düşerdi. */
+  --color-danger-contrast: #ffffff;
 
   /* Every stop independently >=5.6:1 vs white -- safe as a background behind white text. */
   --gradient-safe: linear-gradient(135deg, var(--color-ink) 0%, var(--color-primary-dark) 50%, var(--color-primary) 100%);
@@ -92,6 +99,7 @@
     --color-text-muted: #b5a899;
     --color-border: #3f352c;
     --color-danger: #ff8a80;
+    --color-danger-contrast: #1a1512;
     /* Sıcak altın: düz bg'ye karşı 9.81:1, düz surface'a karşı 8.73:1. Minimumun epey üstünde
        tutuldu -- axe-core'un piksel örnekleyen kontrast kontrolü, saydam header'ın (backdrop-filter
        + saturate) arkasından sızan içeriğin sınırda kalan bir rengi 4.5:1'in altına düşürdüğünü
@@ -115,6 +123,7 @@
   --color-text-muted: #b5a899;
   --color-border: #3f352c;
   --color-danger: #ff8a80;
+  --color-danger-contrast: #1a1512;
   --color-accent-text: #e0b978;
   --color-focus-ring: var(--color-accent);
   --header-glass-bg: rgb(38, 32, 25);

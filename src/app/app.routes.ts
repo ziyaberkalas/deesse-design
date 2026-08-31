@@ -47,6 +47,12 @@ export const routes: Routes = [
     title: 'Sipariş Yönetimi',
   },
   {
+    path: 'yonetim/stok',
+    loadComponent: () => import('./features/admin/admin-stock/admin-stock').then((m) => m.AdminStock),
+    canActivate: [authGuard, adminGuard],
+    title: 'Stok Yönetimi',
+  },
+  {
     path: '**',
     loadComponent: () => import('./features/not-found/not-found').then((m) => m.NotFound),
     title: 'Sayfa Bulunamadı',

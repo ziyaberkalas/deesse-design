@@ -5,6 +5,9 @@ import { FormField, form, minLength, required } from '@angular/forms/signals';
 import { ProductsService } from '../../../core/services/products.service';
 import { CATEGORY_LABELS } from '../../../core/data/products.data';
 import { ShopierBuyButton } from '../../../shared/ui/shopier-buy-button/shopier-buy-button';
+import { WhatsappCtaButton } from '../../../shared/ui/whatsapp-cta-button/whatsapp-cta-button';
+import { StockBadge } from '../../../shared/ui/stock-badge/stock-badge';
+import { StockService } from '../../../core/services/stock.service';
 import { ReviewList } from '../../../shared/ui/review-list/review-list';
 import { StarRating } from '../../../shared/ui/star-rating/star-rating';
 import { StarRatingInput } from '../../../shared/ui/star-rating-input/star-rating-input';
@@ -20,6 +23,8 @@ import { ReviewsService } from '../../../core/services/reviews.service';
     RouterLink,
     FormField,
     ShopierBuyButton,
+    WhatsappCtaButton,
+    StockBadge,
     ReviewList,
     StarRating,
     StarRatingInput,
@@ -30,6 +35,7 @@ import { ReviewsService } from '../../../core/services/reviews.service';
 export class ProductDetail {
   private readonly productsService = inject(ProductsService);
   private readonly favorites = inject(FavoritesService);
+  private readonly stock = inject(StockService);
   private readonly reviewsService = inject(ReviewsService);
   protected readonly auth = inject(AuthService);
 
@@ -43,6 +49,18 @@ export class ProductDetail {
   });
 
   protected readonly selectedImageIndex = signal(0);
+
+  protected readonly stockStatus = computed(() => {
+    const product = this.product();
+    return product ? this.stock.statusFor(product.id) : 'unknown';
+  });
+
+  protected readonly isOutOfStock = computed(() => this.stockStatus() === 'out-of-stock');
+
+  /** Stok tükendiğinde WhatsApp mesajını ürün adıyla önden doldurur. */
+  protected readonly restockMessage = computed(
+    () => `Merhaba, "${this.product()?.name ?? ''}" ürünü stokta yok. Tekrar üretilecek mi?`,
+  );
 
   protected readonly isFavorite = computed(() => {
     const product = this.product();

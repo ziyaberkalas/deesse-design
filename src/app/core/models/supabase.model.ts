@@ -37,6 +37,19 @@ export interface ReviewRecord {
   created_at: string;
 }
 
+export interface ProductStockRecord {
+  product_id: string;
+  stock: number;
+  updated_at: string;
+}
+
+/**
+ * Bir ürünün stok durumu.
+ * 'unknown' = product_stock tablosunda satırı yok, yani takip edilmiyor. Bu durumda sitede
+ * rozet gösterilmez ve satın alma normal çalışır (özellik ürün başına isteğe bağlı).
+ */
+export type StockStatus = 'unknown' | 'out-of-stock' | 'last-one' | 'in-stock';
+
 /** Ürün detay sayfasındaki yorum formunun hangi durumda gösterileceğini belirler. */
 export type ReviewEligibility =
   | { status: 'eligible'; orderId: string }

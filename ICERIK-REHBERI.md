@@ -1,8 +1,5 @@
 # İçerik Düzenleme Rehberi
 
-Bu dosya, **kod bilmeden** sitenin içeriğini güncellemeniz için hazırlandı.
-Aşağıdaki 5 dosya dışında hiçbir şeye dokunmanıza gerek yok.
-
 > Her düzenlemeden sonra: dosyayı kaydedin → `npm start` çalışıyorsa tarayıcı kendini yeniler.
 > Yayına almak için: `git add -A` → `git commit -m "içerik güncellendi"` → `git push`
 
@@ -96,6 +93,28 @@ bulanık görünüyor. Elinizde daha büyük hâlleri varsa değiştirmeniz gör
 
 ---
 
+## 3b. Stok takibi → **kod değil, yönetim paneli**
+
+Stok, diğer içeriklerden farklı olarak **veritabanında** tutulur; dosya düzenlemenize gerek yok.
+
+Siteye yönetici olarak girin → üstteki **Stok** bağlantısı → `/yonetim/stok`
+
+| Durum | Sitede görünen |
+|---|---|
+| Takip edilmiyor (varsayılan) | Hiçbir şey — satın alma normal çalışır |
+| Stok **2 ve üzeri** | Hiçbir şey |
+| Stok **1** | 🟡 "Son ürün" rozeti |
+| Stok **0** | 🔴 "Stokta yok" rozeti + satın alma butonu WhatsApp'a döner |
+
+**Takibe al** butonu ürünü listeye 0 stokla ekler; **+ / −** ile adet değiştirirsiniz, ya da kutuya
+doğrudan sayı yazabilirsiniz. **Takipten çıkar** derseniz ürün eski hâline döner (rozet yok,
+satın alma normal).
+
+⚠️ **Stok iki yerde:** Shopier de kendi stoğunu tutuyor. Satış olduğunda buradan da düşürmeniz
+gerekir, yoksa sitede "stokta var" görünürken Shopier'de tükenmiş olabilir.
+
+---
+
 ## 4. İletişim bilgileri → `src/app/core/config/site-config.ts`
 
 Telefon, Instagram, e-posta, Shopier mağaza adresi ve site sloganı burada. Tek yerden değişir,
@@ -158,6 +177,6 @@ Bunlar site mantığı; bozulursa sayfalar çalışmaz:
 - `src/app/features/` — sayfa kodları
 - `src/app/shared/` — ortak bileşenler
 - `src/app/core/services/` — üyelik, sipariş, yorum mantığı
-- `supabase/migrations/` — veritabanı kurulumu (bir kez çalıştırıldı, tekrar çalıştırmayın)
+- `supabase/migrations/` — veritabanı kurulumu (her dosya bir kez çalıştırılır, tekrarlamayın)
 - `src/styles.css` — renkler ve yazı tipleri (değiştirmek isterseniz bana söyleyin,
   renk kontrastlarının erişilebilirlik standardını bozmaması gerekiyor)

@@ -6,7 +6,6 @@ export const CATEGORY_LABELS: Record<string, string> = {
   aksesuar: 'Aksesuar',
 };
 
-// Ürünler, fiyatlar ve fotoğraflar Shopier mağazasından alınmıştır.
 // TODO: her ürüne kendi Shopier linkini ekleyin (shopierUrl). Boş bırakılanlar mağaza köküne yönlenir.
 //
 // Fotoğraf boyutları: Shopier'den gelen görseller kare (1:1) ve düşük çözünürlüklü

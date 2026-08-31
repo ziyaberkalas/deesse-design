@@ -24,7 +24,10 @@
       [priority]="priority()"
     />
     <div class="body">
-      <span class="category">{{ categoryLabel() }}</span>
+      <div class="meta-row">
+        <span class="category">{{ categoryLabel() }}</span>
+        <app-stock-badge [status]="stockStatus()" />
+      </div>
       <h3 class="name">{{ product().name }}</h3>
       <p class="short-desc">{{ product().shortDescription }}</p>
       <!-- Hiç yorum yokken 5 boş yıldız "0 puan almış" izlenimi verirdi; gizlemek daha doğru. -->

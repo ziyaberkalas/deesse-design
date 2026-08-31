@@ -1,0 +1,101 @@
+<section class="admin-page">
+  <h1>Stok Yönetimi</h1>
+  <p class="intro">
+    Satış olduğunda stoğu buradan düşürün. Stok <strong>1</strong> olduğunda ürün kartında
+    "Son ürün", <strong>0</strong> olduğunda "Stokta yok" görünür ve satın alma butonu
+    WhatsApp'a dönüşür.
+  </p>
+  <p class="intro note">
+    Takip edilmeyen ürünlerde hiçbir rozet çıkmaz ve satın alma normal çalışır — yani stok
+    takibini istediğiniz ürünlerde açabilirsiniz. Şu an {{ trackedCount() }} / {{ rows().length }}
+    ürün takip ediliyor.
+  </p>
+
+  @if (errorMessage(); as error) {
+    <p class="form-alert" role="alert">{{ error }}</p>
+  }
+
+  @if (isLoading()) {
+    <p class="muted" role="status">Stok bilgileri yükleniyor...</p>
+  } @else {
+    <div class="table-scroll">
+      <table>
+        <caption class="visually-hidden">Ürünlerin stok adetleri ve düzenleme işlemleri</caption>
+        <thead>
+          <tr>
+            <th scope="col">Ürün</th>
+            <th scope="col">Stok</th>
+            <th scope="col">İşlem</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (row of rows(); track row.product.id) {
+            <tr>
+              <th scope="row" class="product-cell">{{ row.product.name }}</th>
+              <td>
+                @if (row.stock === undefined) {
+                  <span class="muted">Takip edilmiyor</span>
+                } @else {
+                  <label class="visually-hidden" [for]="'stok-' + row.product.id">
+                    {{ row.product.name }} stok adedi
+                  </label>
+                  <input
+                    class="stock-input"
+                    [id]="'stok-' + row.product.id"
+                    type="number"
+                    min="0"
+                    inputmode="numeric"
+                    [value]="row.stock"
+                    [disabled]="busyProductId() === row.product.id"
+                    (change)="onStockInput(row.product.id, $event)"
+                  />
+                }
+              </td>
+              <td>
+                <div class="actions">
+                  @if (row.stock === undefined) {
+                    <button
+                      type="button"
+                      class="btn-secondary"
+                      [disabled]="busyProductId() === row.product.id"
+                      (click)="startTracking(row.product.id)"
+                    >
+                      Takibe al
+                    </button>
+                  } @else {
+                    <button
+                      type="button"
+                      class="step-btn"
+                      [disabled]="busyProductId() === row.product.id || row.stock === 0"
+                      [attr.aria-label]="row.product.name + ' stoğunu bir azalt'"
+                      (click)="adjust(row.product.id, -1)"
+                    >
+                      −
+                    </button>
+                    <button
+                      type="button"
+                      class="step-btn"
+                      [disabled]="busyProductId() === row.product.id"
+                      [attr.aria-label]="row.product.name + ' stoğunu bir artır'"
+                      (click)="adjust(row.product.id, 1)"
+                    >
+                      +
+                    </button>
+                    <button
+                      type="button"
+                      class="btn-secondary"
+                      [disabled]="busyProductId() === row.product.id"
+                      (click)="stopTracking(row.product.id)"
+                    >
+                      Takipten çıkar
+                    </button>
+                  }
+                </div>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</section>

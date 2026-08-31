@@ -32,8 +32,9 @@
           <a routerLink="/hesabim" routerLinkActive="active" (click)="closeMenu()">Hesabım</a>
           @if (auth.isAdmin()) {
             <a routerLink="/yonetim/siparisler" routerLinkActive="active" (click)="closeMenu()">
-              Sipariş Yönetimi
+              Siparişler
             </a>
+            <a routerLink="/yonetim/stok" routerLinkActive="active" (click)="closeMenu()">Stok</a>
           }
         } @else {
           <a routerLink="/giris" routerLinkActive="active" (click)="closeMenu()">Giriş Yap</a>

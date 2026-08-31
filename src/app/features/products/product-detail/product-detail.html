@@ -27,7 +27,10 @@
     </div>
 
     <div class="info">
-      <span class="category">{{ categoryLabel() }}</span>
+      <div class="meta-row">
+        <span class="category">{{ categoryLabel() }}</span>
+        <app-stock-badge [status]="stockStatus()" />
+      </div>
       <h1>{{ p.name }}</h1>
       @if (mergedReviews().length > 0) {
         <app-star-rating [rating]="averageRating()" [reviewCount]="mergedReviews().length" />
@@ -42,7 +45,13 @@
       <p class="description">{{ p.description }}</p>
 
       <div class="actions">
-        <app-shopier-buy-button [product]="p" />
+        @if (isOutOfStock()) {
+          <!-- Shopier'e göndermek yerine WhatsApp: müşteri ürünü bulamama hayal kırıklığı
+               yaşamaz, siz de yeniden üretim talebini yakalarsınız. -->
+          <app-whatsapp-cta-button label="Stokta Yok — Bilgi İçin Yazın" [message]="restockMessage()" />
+        } @else {
+          <app-shopier-buy-button [product]="p" />
+        }
         <button
           type="button"
           class="favorite-toggle"

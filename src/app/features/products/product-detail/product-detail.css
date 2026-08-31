@@ -55,6 +55,12 @@
   gap: var(--space-3);
 }
 
+.meta-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
 .category {
   font-size: 0.8125rem;
   text-transform: uppercase;

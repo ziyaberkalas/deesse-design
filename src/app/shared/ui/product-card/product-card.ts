@@ -4,16 +4,19 @@ import { RouterLink } from '@angular/router';
 import { Product } from '../../../core/models/product.model';
 import { CATEGORY_LABELS } from '../../../core/data/products.data';
 import { StarRating } from '../star-rating/star-rating';
+import { StockBadge } from '../stock-badge/stock-badge';
 import { FavoritesService } from '../../../core/services/favorites.service';
+import { StockService } from '../../../core/services/stock.service';
 
 @Component({
   selector: 'app-product-card',
-  imports: [NgOptimizedImage, CurrencyPipe, RouterLink, StarRating],
+  imports: [NgOptimizedImage, CurrencyPipe, RouterLink, StarRating, StockBadge],
   templateUrl: './product-card.html',
   styleUrl: './product-card.css',
 })
 export class ProductCard {
   private readonly favorites = inject(FavoritesService);
+  private readonly stock = inject(StockService);
 
   readonly product = input.required<Product>();
   readonly priority = input(false);
@@ -29,6 +32,8 @@ export class ProductCard {
   });
 
   protected readonly isFavorite = computed(() => this.favorites.isFavorite(this.product().id));
+
+  protected readonly stockStatus = computed(() => this.stock.statusFor(this.product().id));
 
   protected toggleFavorite(): void {
     this.favorites.toggle(this.product().id);
