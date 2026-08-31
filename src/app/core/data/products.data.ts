@@ -48,9 +48,35 @@ export const PRODUCTS: Product[] = [
     description:
       'Venüs, markanın imza siluetlerinden biri. Yuvarlatılmış hatları kadınsı bir zarafet taşırken, ' +
       'özenle seçilmiş malzemesi uzun yıllar kullanım sunar.',
-    images: [{ url: 'images/products/venus-1.jpeg', alt: 'Venüs çanta', width: 250, height: 250 }],
+    images: [{ url: 'images/products/venus-1.jpeg', alt: 'Venüs çanta, lacivert', width: 250, height: 250 }],
     price: 4200,
     featured: true,
+    reviews: [],
+  },
+  {
+    // TODO: Shopier'deki tam ürün adıyla değiştirin. İsim fotoğraftaki renge göre verildi.
+    id: 'venus-mavi',
+    name: 'Venüs Mavi',
+    categoryId: 'canta',
+    shortDescription: 'Venüs formunun mavi boncuklu, silindir siluetli versiyonu.',
+    description:
+      'Venüs Mavi, imza Venüs formunun daha uzun, silindir hatlı yorumu. Parlak mavi boncuk ' +
+      'işçiliği ve büzgülü üst detayıyla akşam kullanımı için tasarlandı.',
+    images: [{ url: 'images/products/venus-mavi-1.jpeg', alt: 'Venüs Mavi çanta', width: 250, height: 250 }],
+    price: 3200,
+    reviews: [],
+  },
+  {
+    // TODO: Shopier'deki tam ürün adıyla değiştirin. İsim fotoğraftaki renge göre verildi.
+    id: 'venus-buz-mavi',
+    name: 'Venüs Buz Mavi',
+    categoryId: 'canta',
+    shortDescription: 'Buz mavisi kristal boncuklu, daire formlu Venüs modeli.',
+    description:
+      'Venüs Buz Mavi, daire silueti ve ışığı yansıtan buz mavisi kristal boncuklarıyla ' +
+      'koleksiyonun en dikkat çekici parçalarından biri. Metal çerçeve sapı ve zinciriyle birlikte gelir.',
+    images: [{ url: 'images/products/venus-buz-mavi-1.jpeg', alt: 'Venüs Buz Mavi çanta', width: 458, height: 458 }],
+    price: 2800,
     reviews: [],
   },
   {
@@ -102,11 +128,24 @@ export const PRODUCTS: Product[] = [
       'Love, markanın en çok tercih edilen parçası. Kompakt boyutu ve zarif formuyla akşam ' +
       'davetlerinden günlük kullanıma kadar geniş bir kullanım alanı sunar.',
     images: [
-      { url: 'images/products/love-1.jpeg', alt: 'Love çanta', width: 458, height: 458 },
+      { url: 'images/products/love-1.jpeg', alt: 'Love çanta, pudra rengi', width: 458, height: 458 },
       { url: 'images/products/love-2.jpeg', alt: 'Love çanta, farklı açıdan', width: 458, height: 458 },
     ],
     price: 2700,
     featured: true,
+    reviews: [],
+  },
+  {
+    // TODO: Shopier'deki tam ürün adıyla değiştirin. İsim fotoğraftaki renge göre verildi.
+    id: 'love-kirmizi',
+    name: 'Love Kırmızı',
+    categoryId: 'canta',
+    shortDescription: 'Love modelinin canlı kırmızı boncuklu versiyonu.',
+    description:
+      'Love Kırmızı, sevilen Love formunun iddialı bir yorumu. Canlı kırmızı boncuk işçiliği ve ' +
+      'zincir askısıyla özel günlerde öne çıkan bir parça.',
+    images: [{ url: 'images/products/love-kirmizi-1.jpeg', alt: 'Love Kırmızı çanta', width: 250, height: 250 }],
+    price: 3200,
     reviews: [],
   },
   {
