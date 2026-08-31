@@ -32,7 +32,7 @@
   <h2 id="featured-heading" appScrollReveal>Öne Çıkan Modeller</h2>
   <div class="grid">
     @for (product of featuredProducts(); track product.id; let i = $index) {
-      <app-product-card [product]="product" [priority]="i === 0" />
+      <app-product-card [product]="product" [priority]="i < 4" />
     }
   </div>
 </section>

@@ -4,7 +4,7 @@
   @if (favoriteProducts().length > 0) {
     <div class="grid">
       @for (product of favoriteProducts(); track product.id; let i = $index) {
-        <app-product-card [product]="product" [priority]="i === 0" />
+        <app-product-card [product]="product" [priority]="i < 4" />
       }
     </div>
   } @else {

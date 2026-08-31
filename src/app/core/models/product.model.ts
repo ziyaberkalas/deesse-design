@@ -1,6 +1,12 @@
 export interface ProductImage {
   url: string;
   alt: string;
+  /**
+   * Gerçek dosya boyutları. NgOptimizedImage bunları zorunlu tutar ve dosyanın gerçek oranıyla
+   * uyuşmazsa konsolda uyarır; ayrıca doğru değerler yükleme sırasında düzen kaymasını (CLS) önler.
+   */
+  width: number;
+  height: number;
 }
 
 export interface Review {

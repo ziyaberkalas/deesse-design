@@ -29,6 +29,9 @@ yarn-error.log
 !.vscode/mcp.json
 .history/*
 
+# Claude Code'un yerel izin/ayar dosyaları -- makineye özgü, paylaşılmaz
+.claude/
+
 # Miscellaneous
 /.angular/cache
 .sass-cache/

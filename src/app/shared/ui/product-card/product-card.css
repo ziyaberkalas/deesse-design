@@ -58,6 +58,10 @@
 
 .thumb {
   width: 100%;
+  /* Fotoğraflar Shopier'den kareye beyaz dolguyla geliyor; 4:5 kutu + cover bu beyaz yan
+     kenarları kırpar. height:auto şart: NgOptimizedImage'ın yazdığı height attribute'u kesin değer
+     sayılır, iki boyut da kesinken aspect-ratio yok sayılır ve kartlar farklı yükseklikte kalır. */
+  height: auto;
   aspect-ratio: 4 / 5;
   object-fit: cover;
   transition: transform 0.4s ease;

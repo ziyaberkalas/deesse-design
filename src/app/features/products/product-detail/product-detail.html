@@ -5,8 +5,8 @@
         class="main-image"
         [ngSrc]="p.images[selectedImageIndex()].url"
         [alt]="p.images[selectedImageIndex()].alt"
-        width="800"
-        height="1000"
+        [width]="p.images[selectedImageIndex()].width"
+        [height]="p.images[selectedImageIndex()].height"
         priority
       />
       @if (p.images.length > 1) {
@@ -19,7 +19,7 @@
               [attr.aria-label]="'Görsel ' + (i + 1)"
               (click)="selectImage(i)"
             >
-              <img [ngSrc]="image.url" [alt]="''" width="800" height="1000" />
+              <img [ngSrc]="image.url" [alt]="''" [width]="image.width" [height]="image.height" />
             </button>
           }
         </div>
@@ -29,7 +29,9 @@
     <div class="info">
       <span class="category">{{ categoryLabel() }}</span>
       <h1>{{ p.name }}</h1>
-      <app-star-rating [rating]="averageRating()" [reviewCount]="p.reviews.length" />
+      @if (mergedReviews().length > 0) {
+        <app-star-rating [rating]="averageRating()" [reviewCount]="mergedReviews().length" />
+      }
       <p class="price">
         @if (p.price !== null) {
           {{ p.price | currency: 'TRY' : 'symbol' : '1.0-0' }}

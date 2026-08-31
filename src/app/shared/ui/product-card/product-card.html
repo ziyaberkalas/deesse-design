@@ -19,15 +19,18 @@
       class="thumb"
       [ngSrc]="product().images[0].url"
       [alt]="product().images[0].alt"
-      width="800"
-      height="1000"
+      [width]="product().images[0].width"
+      [height]="product().images[0].height"
       [priority]="priority()"
     />
     <div class="body">
       <span class="category">{{ categoryLabel() }}</span>
       <h3 class="name">{{ product().name }}</h3>
       <p class="short-desc">{{ product().shortDescription }}</p>
-      <app-star-rating [rating]="averageRating()" [reviewCount]="product().reviews.length" />
+      <!-- Hiç yorum yokken 5 boş yıldız "0 puan almış" izlenimi verirdi; gizlemek daha doğru. -->
+      @if (product().reviews.length > 0) {
+        <app-star-rating [rating]="averageRating()" [reviewCount]="product().reviews.length" />
+      }
       <p class="price">
         @if (product().price !== null) {
           {{ product().price | currency: 'TRY' : 'symbol' : '1.0-0' }}
