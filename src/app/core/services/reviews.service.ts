@@ -3,11 +3,13 @@ import { SupabaseClientService } from './supabase-client.service';
 import { AuthService } from './auth.service';
 import { OrderRecord, ReviewEligibility, ReviewRecord } from '../models/supabase.model';
 import { Review } from '../models/product.model';
+import { LanguageService } from '../i18n/language.service';
 
 @Service()
 export class ReviewsService {
   private readonly supabase = inject(SupabaseClientService);
   private readonly auth = inject(AuthService);
+  private readonly language = inject(LanguageService);
 
   /** Bir ürünün veritabanındaki (onaylı satın almaya dayalı) yorumları. Okuma herkese açık. */
   async getReviewsForProduct(productId: string): Promise<Review[]> {
@@ -75,7 +77,7 @@ export class ReviewsService {
   ): Promise<{ error: string | null }> {
     const user = this.auth.currentUser();
     if (!user) {
-      return { error: 'Yorum yazmak için giriş yapmalısınız.' };
+      return { error: this.language.t().review.mustLogIn };
     }
 
     const client = await this.supabase.getClient();
@@ -83,7 +85,9 @@ export class ReviewsService {
       order_id: orderId,
       user_id: user.id,
       product_id: productId,
-      author_name: this.auth.displayName() || 'Müşteri',
+      // Yazarın adı veritabanına kaydedilir; bu yüzden yorumu yazdığı andaki dilin karşılığı
+      // kalıcı olur -- sonradan dil değiştirilse de eski yorumun adı değişmez, doğrusu da bu.
+      author_name: this.auth.displayName() || this.language.t().review.anonymousAuthor,
       rating,
       comment: comment.trim(),
     });

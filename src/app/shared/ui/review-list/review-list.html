@@ -6,16 +6,18 @@
           <span class="author">
             {{ review.author }}
             @if (review.verified) {
-              <span class="verified-badge">Onaylı Satın Alma</span>
+              <span class="verified-badge">{{ t().review.verifiedBadge }}</span>
             }
           </span>
           <app-star-rating [rating]="review.rating" />
         </div>
         <p class="comment">{{ review.comment }}</p>
-        <time class="date" [attr.datetime]="review.date">{{ review.date | date: 'longDate' }}</time>
+        <time class="date" [attr.datetime]="review.date">
+          {{ review.date | date: 'longDate' : undefined : locale() }}
+        </time>
       </li>
     }
   </ul>
 } @else {
-  <p class="empty">Henüz değerlendirme yok.</p>
+  <p class="empty">{{ t().review.empty }}</p>
 }

@@ -1,23 +1,16 @@
 <section class="auth-page">
-  <h1>Kayıt Ol</h1>
+  <h1>{{ t().auth.signupTitle }}</h1>
 
   @if (!configured) {
-    <p class="form-notice">
-      Üyelik sistemi henüz yapılandırılmadı. Site yöneticisinin Supabase bağlantı bilgilerini
-      girmesi gerekiyor.
-    </p>
+    <p class="form-notice">{{ t().auth.notConfigured }}</p>
   }
 
   @if (needsEmailConfirmation()) {
     <p class="form-notice" role="status">
-      Kaydınız alındı. Girişi tamamlamak için e-posta adresinize gönderdiğimiz onay bağlantısına
-      tıklayın, ardından <a routerLink="/giris">giriş yapabilirsiniz</a>.
+      {{ t().auth.confirmEmailLead }} <a routerLink="/giris">{{ t().auth.confirmEmailLink }}</a>.
     </p>
   } @else {
-    <p class="intro">
-      Sipariş geçmişinizi görebilmek ve satın aldığınız ürünlere değerlendirme yazabilmek için
-      üye olun. Satın alma işlemleri Shopier mağazamızdan yapılmaya devam eder.
-    </p>
+    <p class="intro">{{ t().auth.signupIntro }}</p>
 
     @if (serverError(); as error) {
       <p class="form-alert" role="alert">{{ error }}</p>
@@ -25,7 +18,7 @@
 
     <form (submit)="$event.preventDefault(); onSubmit()" novalidate>
       <div class="form-field">
-        <label for="signup-name">Ad Soyad</label>
+        <label for="signup-name">{{ t().auth.fullName }}</label>
         <input id="signup-name" type="text" autocomplete="name" [formField]="signupForm.displayName" />
         @if (signupForm.displayName().touched() && signupForm.displayName().invalid()) {
           @for (error of signupForm.displayName().errors(); track $index) {
@@ -35,9 +28,9 @@
       </div>
 
       <div class="form-field">
-        <label for="signup-phone">Telefon (WhatsApp)</label>
+        <label for="signup-phone">{{ t().auth.phoneWhatsapp }}</label>
         <input id="signup-phone" type="tel" autocomplete="tel" [formField]="signupForm.phone" />
-        <span class="hint">Siparişlerinizi hesabınızla eşleştirebilmemiz için WhatsApp numaranız.</span>
+        <span class="hint">{{ t().auth.phoneHint }}</span>
         @if (signupForm.phone().touched() && signupForm.phone().invalid()) {
           @for (error of signupForm.phone().errors(); track $index) {
             <span class="field-error">{{ error.message }}</span>
@@ -46,7 +39,7 @@
       </div>
 
       <div class="form-field">
-        <label for="signup-email">E-posta</label>
+        <label for="signup-email">{{ t().auth.email }}</label>
         <input id="signup-email" type="email" autocomplete="email" [formField]="signupForm.email" />
         @if (signupForm.email().touched() && signupForm.email().invalid()) {
           @for (error of signupForm.email().errors(); track $index) {
@@ -56,7 +49,7 @@
       </div>
 
       <div class="form-field">
-        <label for="signup-password">Şifre</label>
+        <label for="signup-password">{{ t().auth.password }}</label>
         <input
           id="signup-password"
           type="password"
@@ -71,10 +64,10 @@
       </div>
 
       <button type="submit" class="btn-primary" [disabled]="!canSubmit()">
-        {{ submitting() ? 'Kaydediliyor...' : 'Kayıt Ol' }}
+        {{ submitting() ? t().auth.signingUp : t().auth.signupTitle }}
       </button>
     </form>
 
-    <p class="alt-action">Zaten üye misiniz? <a routerLink="/giris">Giriş yapın</a></p>
+    <p class="alt-action">{{ t().auth.haveAccount }} <a routerLink="/giris">{{ t().auth.loginLink }}</a></p>
   }
 </section>

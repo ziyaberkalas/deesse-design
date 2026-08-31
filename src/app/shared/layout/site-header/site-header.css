@@ -40,7 +40,8 @@
 }
 
 .menu-toggle,
-.theme-toggle {
+.theme-toggle,
+.lang-toggle {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -50,6 +51,15 @@
   padding: var(--space-2) var(--space-3);
   color: var(--color-text);
   cursor: pointer;
+}
+
+/* Dil kodu iki harf: ikon butonlarıyla aynı yükseklikte kalsın diye sabit min genişlik. */
+.lang-toggle {
+  font-family: inherit;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  min-width: 2.75rem;
 }
 
 .menu-toggle {

@@ -1,10 +1,10 @@
 <a
   class="floating-whatsapp"
   [class.hidden-for-nav]="navOpen()"
-  [href]="href"
+  [href]="href()"
   target="_blank"
   rel="noopener noreferrer"
-  aria-label="WhatsApp'tan yazın"
+  [attr.aria-label]="t().whatsapp.floatingLabel"
 >
   <svg aria-hidden="true" viewBox="0 0 32 32" width="26" height="26" fill="currentColor">
     <path

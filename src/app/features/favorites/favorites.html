@@ -1,5 +1,5 @@
 <section class="favorites-page">
-  <h1>Favorilerim</h1>
+  <h1>{{ t().favorites.title }}</h1>
 
   @if (favoriteProducts().length > 0) {
     <div class="grid">
@@ -9,8 +9,8 @@
     </div>
   } @else {
     <div class="empty">
-      <p>Henüz favori ürününüz yok.</p>
-      <a routerLink="/urunler">Tasarımları keşfedin</a>
+      <p>{{ t().favorites.empty }}</p>
+      <a routerLink="/urunler">{{ t().favorites.exploreLink }}</a>
     </div>
   }
 </section>

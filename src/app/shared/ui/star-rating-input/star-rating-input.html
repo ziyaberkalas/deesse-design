@@ -1,5 +1,5 @@
 <fieldset class="star-input">
-  <legend>{{ legend() }}</legend>
+  <legend>{{ legendText() }}</legend>
   <div class="options">
     @for (star of stars; track star) {
       <label class="star-option" [class.filled]="star <= rating()">
@@ -10,7 +10,7 @@
           [checked]="rating() === star"
           (change)="select(star)"
         />
-        <span class="visually-hidden">{{ star }} yıldız</span>
+        <span class="visually-hidden">{{ t().review.starCount(star) }}</span>
         <span class="glyph" aria-hidden="true">★</span>
       </label>
     }

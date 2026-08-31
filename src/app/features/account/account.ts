@@ -4,12 +4,7 @@ import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../core/services/auth.service';
 import { OrdersService } from '../../core/services/orders.service';
 import { OrderStatus } from '../../core/models/supabase.model';
-
-const STATUS_LABELS: Record<OrderStatus, string> = {
-  pending: 'Onay Bekliyor',
-  confirmed: 'Onaylandı',
-  cancelled: 'İptal Edildi',
-};
+import { LanguageService } from '../../core/i18n/language.service';
 
 @Component({
   selector: 'app-account',
@@ -21,6 +16,10 @@ export class Account {
   private readonly auth = inject(AuthService);
   private readonly orders = inject(OrdersService);
   private readonly router = inject(Router);
+  private readonly language = inject(LanguageService);
+
+  protected readonly t = this.language.t;
+  protected readonly locale = this.language.locale;
 
   protected readonly displayName = this.auth.displayName;
   protected readonly isAdmin = this.auth.isAdmin;
@@ -30,7 +29,7 @@ export class Account {
   });
 
   protected statusLabel(status: OrderStatus): string {
-    return STATUS_LABELS[status];
+    return this.t().orderStatus[status];
   }
 
   protected async signOut(): Promise<void> {

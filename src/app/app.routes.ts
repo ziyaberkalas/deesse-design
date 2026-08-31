@@ -2,11 +2,13 @@ import { Routes } from '@angular/router';
 import { authGuard } from './core/guards/auth.guard';
 import { adminGuard } from './core/guards/admin.guard';
 
+// Başlıklar `title` yerine `data.titleKey` ile verilir; çeviri TranslatedTitleStrategy'de
+// yapılır (bkz. core/i18n/translated-title.strategy.ts).
 export const routes: Routes = [
   {
     path: '',
     loadComponent: () => import('./features/home/home').then((m) => m.Home),
-    title: 'Ana Sayfa',
+    data: { titleKey: 'home' },
   },
   {
     path: 'urunler',
@@ -15,28 +17,28 @@ export const routes: Routes = [
   {
     path: 'iletisim',
     loadComponent: () => import('./features/contact/contact').then((m) => m.Contact),
-    title: 'İletişim',
+    data: { titleKey: 'contact' },
   },
   {
     path: 'favoriler',
     loadComponent: () => import('./features/favorites/favorites').then((m) => m.Favorites),
-    title: 'Favorilerim',
+    data: { titleKey: 'favorites' },
   },
   {
     path: 'giris',
     loadComponent: () => import('./features/auth/login/login').then((m) => m.Login),
-    title: 'Giriş Yap',
+    data: { titleKey: 'login' },
   },
   {
     path: 'kayit',
     loadComponent: () => import('./features/auth/signup/signup').then((m) => m.Signup),
-    title: 'Kayıt Ol',
+    data: { titleKey: 'signup' },
   },
   {
     path: 'hesabim',
     loadComponent: () => import('./features/account/account').then((m) => m.Account),
     canActivate: [authGuard],
-    title: 'Hesabım',
+    data: { titleKey: 'account' },
   },
   {
     // authGuard önce gelmeli: çıkış yapmış ziyaretçi /giris'e yönlensin, adminGuard'ın
@@ -44,17 +46,17 @@ export const routes: Routes = [
     path: 'yonetim/siparisler',
     loadComponent: () => import('./features/admin/admin-orders/admin-orders').then((m) => m.AdminOrders),
     canActivate: [authGuard, adminGuard],
-    title: 'Sipariş Yönetimi',
+    data: { titleKey: 'adminOrders' },
   },
   {
     path: 'yonetim/stok',
     loadComponent: () => import('./features/admin/admin-stock/admin-stock').then((m) => m.AdminStock),
     canActivate: [authGuard, adminGuard],
-    title: 'Stok Yönetimi',
+    data: { titleKey: 'adminStock' },
   },
   {
     path: '**',
     loadComponent: () => import('./features/not-found/not-found').then((m) => m.NotFound),
-    title: 'Sayfa Bulunamadı',
+    data: { titleKey: 'notFound' },
   },
 ];

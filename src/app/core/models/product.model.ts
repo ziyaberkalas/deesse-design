@@ -1,6 +1,8 @@
 export interface ProductImage {
   url: string;
   alt: string;
+  /** İngilizce alternatif metin. Yazılmazsa `alt` kullanılır. */
+  altEn?: string;
   /**
    * Gerçek dosya boyutları. NgOptimizedImage bunları zorunlu tutar ve dosyanın gerçek oranıyla
    * uyuşmazsa konsolda uyarır; ayrıca doğru değerler yükleme sırasında düzen kaymasını (CLS) önler.
@@ -25,6 +27,15 @@ export interface Product {
   categoryId: string;
   shortDescription: string;
   description: string;
+  /**
+   * İngilizce karşılıklar -- hepsi isteğe bağlı. Yazılmayan alan Türkçesine düşer, böylece
+   * yeni bir ürün eklerken İngilizce metin yazmak zorunlu değildir: site yine çalışır,
+   * o alan yalnızca Türkçe görünür. `name` genelde marka adıdır (Elegance, Venüs) ve
+   * çoğu üründe çeviri gerektirmez.
+   */
+  nameEn?: string;
+  shortDescriptionEn?: string;
+  descriptionEn?: string;
   images: ProductImage[];
   /** null → fiyat sabit değildir, müşteriyle iletişime geçilerek belirlenir */
   price: number | null;

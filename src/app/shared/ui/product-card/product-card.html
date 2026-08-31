@@ -5,7 +5,7 @@
     [class.active]="isFavorite()"
     (click)="toggleFavorite()"
     [attr.aria-pressed]="isFavorite()"
-    [attr.aria-label]="isFavorite() ? 'Favorilerden çıkar' : 'Favorilere ekle'"
+    [attr.aria-label]="isFavorite() ? t().common.removeFromFavorites : t().common.addToFavorites"
   >
     <svg aria-hidden="true" viewBox="0 0 24 24" width="18" height="18" [attr.fill]="isFavorite() ? 'currentColor' : 'none'" stroke="currentColor" stroke-width="2">
       <path
@@ -36,9 +36,9 @@
       }
       <p class="price">
         @if (product().price !== null) {
-          {{ product().price | currency: 'TRY' : 'symbol' : '1.0-0' }}
+          {{ product().price | currency: 'TRY' : currencyDisplay() : '1.0-0' : locale() }}
         } @else {
-          Fiyat için iletişime geçin
+          {{ t().common.priceOnRequest }}
         }
       </p>
     </div>

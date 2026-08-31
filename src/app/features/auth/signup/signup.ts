@@ -3,6 +3,7 @@ import { Router, RouterLink } from '@angular/router';
 import { FormField, form, minLength, required, email as emailValidator } from '@angular/forms/signals';
 import { AuthService } from '../../../core/services/auth.service';
 import { isSupabaseConfigured } from '../../../core/config/supabase-config';
+import { LanguageService } from '../../../core/i18n/language.service';
 
 @Component({
   selector: 'app-signup',
@@ -14,6 +15,7 @@ export class Signup {
   private readonly auth = inject(AuthService);
   private readonly router = inject(Router);
 
+  protected readonly t = inject(LanguageService).t;
   protected readonly configured = isSupabaseConfigured();
   protected readonly submitting = signal(false);
   protected readonly serverError = signal<string | null>(null);
@@ -21,13 +23,14 @@ export class Signup {
   protected readonly needsEmailConfirmation = signal(false);
 
   protected readonly model = signal({ displayName: '', phone: '', email: '', password: '' });
+  // Mesajlar fonksiyon: dil değiştiğinde yeniden hesaplansınlar diye (bkz. login.ts).
   protected readonly signupForm = form(this.model, (schema) => {
-    required(schema.displayName, { message: 'Adınızı girin' });
-    required(schema.phone, { message: 'Telefon numaranızı girin' });
-    required(schema.email, { message: 'E-posta adresinizi girin' });
-    emailValidator(schema.email, { message: 'Geçerli bir e-posta adresi girin' });
-    required(schema.password, { message: 'Bir şifre belirleyin' });
-    minLength(schema.password, 6, { message: 'Şifre en az 6 karakter olmalı' });
+    required(schema.displayName, { message: () => this.t().auth.nameRequired });
+    required(schema.phone, { message: () => this.t().auth.phoneRequired });
+    required(schema.email, { message: () => this.t().auth.emailRequired });
+    emailValidator(schema.email, { message: () => this.t().auth.emailInvalid });
+    required(schema.password, { message: () => this.t().auth.passwordChoose });
+    minLength(schema.password, 6, { message: () => this.t().auth.passwordMinLength });
   });
 
   protected readonly canSubmit = computed(() => !this.submitting() && this.signupForm().valid());

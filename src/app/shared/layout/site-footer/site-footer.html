@@ -2,15 +2,15 @@
   <div class="content">
     <div class="col">
       <h2>{{ siteConfig.siteName }}</h2>
-      <p>{{ siteConfig.tagline }}</p>
-      <app-whatsapp-cta-button label="WhatsApp'tan Yazın" />
+      <p>{{ tagline() }}</p>
+      <app-whatsapp-cta-button [label]="t().whatsapp.writeUs" />
     </div>
 
     <div class="col">
-      <h3>İletişim</h3>
+      <h3>{{ t().footer.contact }}</h3>
       <ul>
-        <li>Telefon: {{ siteConfig.whatsapp.phoneDisplay }}</li>
-        <li>E-posta: {{ siteConfig.contactEmail }}</li>
+        <li>{{ t().footer.phone }}: {{ siteConfig.whatsapp.phoneDisplay }}</li>
+        <li>{{ t().footer.email }}: {{ siteConfig.contactEmail }}</li>
         <li>
           <a [href]="siteConfig.instagram.url" target="_blank" rel="noopener noreferrer">
             Instagram: {{ siteConfig.instagram.handle }}
@@ -20,5 +20,5 @@
     </div>
   </div>
 
-  <p class="copyright">&copy; {{ year }} {{ siteConfig.siteName }}. Tüm hakları saklıdır.</p>
+  <p class="copyright">&copy; {{ year }} {{ siteConfig.siteName }}. {{ t().footer.rightsReserved }}</p>
 </footer>

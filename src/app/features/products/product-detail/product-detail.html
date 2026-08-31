@@ -10,13 +10,13 @@
         priority
       />
       @if (p.images.length > 1) {
-        <div class="thumbs" role="group" aria-label="Ürün görselleri">
+        <div class="thumbs" role="group" [attr.aria-label]="t().productDetail.productImages">
           @for (image of p.images; track image.url; let i = $index) {
             <button
               type="button"
               class="thumb-btn"
               [attr.aria-current]="i === selectedImageIndex()"
-              [attr.aria-label]="'Görsel ' + (i + 1)"
+              [attr.aria-label]="t().productDetail.imageNumber(i + 1)"
               (click)="selectImage(i)"
             >
               <img [ngSrc]="image.url" [alt]="''" [width]="image.width" [height]="image.height" />
@@ -37,9 +37,9 @@
       }
       <p class="price">
         @if (p.price !== null) {
-          {{ p.price | currency: 'TRY' : 'symbol' : '1.0-0' }}
+          {{ p.price | currency: 'TRY' : currencyDisplay() : '1.0-0' : locale() }}
         } @else {
-          Fiyat için iletişime geçin
+          {{ t().common.priceOnRequest }}
         }
       </p>
       <p class="description">{{ p.description }}</p>
@@ -48,7 +48,7 @@
         @if (isOutOfStock()) {
           <!-- Shopier'e göndermek yerine WhatsApp: müşteri ürünü bulamama hayal kırıklığı
                yaşamaz, siz de yeniden üretim talebini yakalarsınız. -->
-          <app-whatsapp-cta-button label="Stokta Yok — Bilgi İçin Yazın" [message]="restockMessage()" />
+          <app-whatsapp-cta-button [label]="t().productDetail.outOfStockCta" [message]="restockMessage()" />
         } @else {
           <app-shopier-buy-button [product]="p" />
         }
@@ -64,18 +64,15 @@
               d="M12 21s-6.7-4.35-9.3-8.1C1 10.3 1.6 6.9 4.3 5.4c2.3-1.3 5-0.6 6.4 1.4l1.3 1.8 1.3-1.8c1.4-2 4.1-2.7 6.4-1.4 2.7 1.5 3.3 4.9 1.6 7.5C18.7 16.65 12 21 12 21Z"
             />
           </svg>
-          {{ isFavorite() ? 'Favorilerde' : 'Favorilere Ekle' }}
+          {{ isFavorite() ? t().common.inFavorites : t().common.addToFavoritesLabel }}
         </button>
       </div>
 
-      <p class="custom-note">
-        Her parça atölyemizde elde üretilir; bu nedenle küçük doku ve ton farklılıkları olabilir.
-        Sorularınız için WhatsApp üzerinden bize yazabilirsiniz.
-      </p>
+      <p class="custom-note">{{ t().productDetail.handmadeNote }}</p>
     </div>
 
     <section class="reviews" aria-labelledby="reviews-heading">
-      <h2 id="reviews-heading">Değerlendirmeler</h2>
+      <h2 id="reviews-heading">{{ t().productDetail.reviewsHeading }}</h2>
       <app-review-list [reviews]="mergedReviews()" />
 
       <div class="review-form-section">
@@ -83,25 +80,24 @@
           <!-- oturum durumu netleşene kadar yanlış mesaj göstermemek için sessiz kalınır -->
         } @else if (!auth.isLoggedIn()) {
           <p class="review-prompt">
-            Bu ürünü satın aldıysanız değerlendirme yazabilirsiniz.
-            <a [routerLink]="['/giris']" [queryParams]="{ redirect: '/urunler/' + p.id }">Giriş yapın</a>
-            veya <a routerLink="/kayit">üye olun</a>.
+            {{ t().review.loginPromptLead }}
+            <a [routerLink]="['/giris']" [queryParams]="{ redirect: '/urunler/' + p.id }">
+              {{ t().review.loginPromptLink }}
+            </a>
+            {{ t().review.loginPromptOr }} <a routerLink="/kayit">{{ t().review.loginPromptSignup }}</a>.
           </p>
         } @else if (eligibilityResource.isLoading()) {
-          <p class="review-prompt" role="status">Değerlendirme hakkınız kontrol ediliyor...</p>
+          <p class="review-prompt" role="status">{{ t().review.checkingEligibility }}</p>
         } @else if (eligibility(); as state) {
           @switch (state.status) {
             @case ('no-confirmed-order') {
-              <p class="review-prompt">
-                Değerlendirme yazabilmek için bu ürünü satın almış olmanız gerekir. Siparişiniz
-                hazırlandığında hesabınıza işlenir ve burada yorum yazabilirsiniz.
-              </p>
+              <p class="review-prompt">{{ t().review.noConfirmedOrder }}</p>
             }
             @case ('already-reviewed') {
-              <p class="review-prompt">Bu ürün için değerlendirmenizi paylaştınız, teşekkürler!</p>
+              <p class="review-prompt">{{ t().review.alreadyReviewed }}</p>
             }
             @case ('eligible') {
-              <h3 class="review-form-heading">Değerlendirmenizi Yazın</h3>
+              <h3 class="review-form-heading">{{ t().review.formHeading }}</h3>
 
               @if (submitError(); as error) {
                 <p class="form-alert" role="alert">{{ error }}</p>
@@ -115,7 +111,7 @@
                 />
 
                 <div class="form-field">
-                  <label for="review-comment">Yorumunuz</label>
+                  <label for="review-comment">{{ t().review.commentLabel }}</label>
                   <textarea id="review-comment" [formField]="reviewForm.comment"></textarea>
                   @if (reviewForm.comment().touched() && reviewForm.comment().invalid()) {
                     @for (error of reviewForm.comment().errors(); track $index) {
@@ -125,7 +121,7 @@
                 </div>
 
                 <button type="submit" class="btn-primary" [disabled]="!canSubmitReview()">
-                  {{ submitting() ? 'Gönderiliyor...' : 'Değerlendirmeyi Gönder' }}
+                  {{ submitting() ? t().review.submitting : t().review.submit }}
                 </button>
               </form>
             }
@@ -136,8 +132,8 @@
   </article>
 } @else {
   <div class="not-found">
-    <h1>Ürün bulunamadı</h1>
-    <p>Aradığınız ürün mevcut değil ya da kaldırılmış olabilir.</p>
-    <a routerLink="/urunler">Tüm ürünlere göz atın</a>
+    <h1>{{ t().productDetail.notFoundTitle }}</h1>
+    <p>{{ t().productDetail.notFoundBody }}</p>
+    <a routerLink="/urunler">{{ t().productDetail.browseAll }}</a>
   </div>
 }

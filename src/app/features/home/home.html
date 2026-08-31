@@ -5,21 +5,21 @@
     <span class="blob blob-3"></span>
   </div>
   <div class="hero-content">
-    <h1>El Yapımı Tasarım Çantalar</h1>
-    <p>{{ siteConfig.tagline }}. Her parça, {{ siteConfig.designer }} imzasıyla atölyemizde tek tek elde üretilir.</p>
+    <h1>{{ t().home.heroTitle }}</h1>
+    <p>{{ t().home.heroLead(tagline(), siteConfig.designer) }}</p>
     <div class="hero-actions">
-      <a class="hero-cta" routerLink="/urunler">Koleksiyonu Keşfedin</a>
+      <a class="hero-cta" routerLink="/urunler">{{ t().home.exploreCollection }}</a>
       <a class="secondary-link" [href]="siteConfig.shopier.shopUrl" target="_blank" rel="noopener noreferrer">
-        Shopier Mağazamız
+        {{ t().home.ourShopierStore }}
       </a>
     </div>
   </div>
 </section>
 
 <section class="stats" aria-labelledby="stats-heading">
-  <h2 id="stats-heading" class="visually-hidden">Markamız hakkında</h2>
+  <h2 id="stats-heading" class="visually-hidden">{{ t().home.aboutBrand }}</h2>
   <dl class="stats-grid">
-    @for (stat of stats; track stat.label) {
+    @for (stat of stats(); track stat.label) {
       <div class="stat" appScrollReveal>
         <dt class="stat-value">{{ stat.value }}</dt>
         <dd class="stat-label">{{ stat.label }}</dd>
@@ -29,7 +29,7 @@
 </section>
 
 <section class="featured" aria-labelledby="featured-heading">
-  <h2 id="featured-heading" appScrollReveal>Öne Çıkan Modeller</h2>
+  <h2 id="featured-heading" appScrollReveal>{{ t().home.featured }}</h2>
   <div class="grid">
     @for (product of featuredProducts(); track product.id; let i = $index) {
       <app-product-card [product]="product" [priority]="i < 4" />
@@ -40,13 +40,13 @@
 <app-testimonial-marquee />
 
 <section class="instagram-teaser" aria-labelledby="instagram-heading">
-  <h2 id="instagram-heading">Instagram'da Biz</h2>
+  <h2 id="instagram-heading">{{ t().home.instagramHeading }}</h2>
   <div class="instagram-grid">
     @for (post of instagramPosts; track post) {
       <app-instagram-embed [postUrl]="post" />
     }
   </div>
   <a class="secondary-link" [href]="siteConfig.instagram.url" target="_blank" rel="noopener noreferrer">
-    Tümünü Instagram'da Gör
+    {{ t().home.seeAllOnInstagram }}
   </a>
 </section>

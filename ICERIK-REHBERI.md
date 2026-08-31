@@ -18,8 +18,14 @@ Bir ürün şu kalıpta yazılır:
     categoryId: 'canta',               // 'canta' | 'kartlik' | 'aksesuar'
     shortDescription: 'Kısa açıklama', // Ürün kartında (listede) görünür, 1 cümle
     description: 'Uzun açıklama...',   // Ürün detay sayfasında görünür
+
+    // --- İngilizce (HEPSİ İSTEĞE BAĞLI, bkz. bölüm 1b) ---
+    nameEn: 'Elegance',                     // Marka adı aynıysa bu satırı hiç yazmayın
+    shortDescriptionEn: 'Short text...',
+    descriptionEn: 'Long text...',
+
     images: [
-      { url: 'images/products/elegance-1.jpeg', alt: 'Elegance çanta', width: 250, height: 250 },
+      { url: 'images/products/elegance-1.jpeg', alt: 'Elegance çanta', altEn: 'Elegance bag', width: 250, height: 250 },
     ],
     price: 4200,                       // Sadece rakam. ₺ ve nokta YAZMAYIN. Fiyat yoksa: null
     shopierUrl: 'https://...',         // İsteğe bağlı (bkz. bölüm 2)
@@ -42,6 +48,56 @@ Var olan bir bloğu kopyalayıp yapıştırın, sonra `id`, `name`, `price`, `im
 - Her satırın sonundaki **virgül** durmalı.
 - Metin içinde kesme işareti varsa: `'Ürün\'ün'` şeklinde ters eğik çizgi koyun, ya da baştan sona çift tırnak kullanın: `"Ürün'ün"`.
 - `width`/`height` fotoğrafın **gerçek** piksel boyutu olmalı (bkz. bölüm 3).
+
+---
+
+## 1b. İngilizce içerik
+
+Sitenin sağ üstünde **EN / TR** düğmesi var. Arayüzün tamamı (menüler, butonlar, formlar,
+hata mesajları, yönetim paneli) iki dilde hazır — oraya dokunmanıza gerek yok.
+
+Sizin yazmanız gereken tek şey **ürün metinlerinin İngilizcesi**, o da **zorunlu değil**:
+
+| Yazarsanız | Yazmazsanız |
+|---|---|
+| İngilizce sitede İngilizce görünür | İngilizce sitede **Türkçesi** görünür — site bozulmaz |
+
+Yani yeni ürün eklerken acele etmeyin: önce Türkçesini girin, İngilizcesini sonra ekleyin.
+
+**Ekleyebileceğiniz alanlar** (her biri ayrı ayrı isteğe bağlı):
+
+| Alan | Karşılığı |
+|---|---|
+| `nameEn` | Ürün adı — *Elegance, Love, Queen* gibi adlar zaten İngilizce, bunlara gerek yok |
+| `shortDescriptionEn` | Kartta görünen kısa açıklama |
+| `descriptionEn` | Detay sayfasındaki uzun açıklama |
+| `altEn` | Fotoğrafın açıklaması (görme engelli kullanıcılar ve Google için) |
+
+**Kategori adları** aynı dosyanın en üstünde:
+
+```ts
+export const CATEGORY_LABELS = {
+  canta: { tr: 'Çanta', en: 'Bag' },
+  ...
+};
+```
+
+**Ana sayfadaki üç rakam** için `stats.data.ts` → `valueEn` / `labelEn` (bkz. bölüm 5).
+
+### Paylaşılabilir İngilizce link
+Adresin sonuna `?lang=en` eklerseniz sayfa doğrudan İngilizce açılır — yurt dışındaki bir
+müşteriye link atarken kullanışlı:
+
+```
+https://siteniz.com/urunler/elegance?lang=en
+```
+
+Ziyaretçi düğmeyle dil değiştirirse tercihi tarayıcısında hatırlanır.
+
+### Fiyatlar
+Fiyatı tek yere yazarsınız, gösterim otomatik değişir: Türkçede **₺4.200**, İngilizcede
+**TRY 4.200**. İngilizcede ISO kodu kullanılıyor çünkü yurt dışındaki müşteri ₺ sembolünü
+tanımayıp tutarı dolar sanabilir.
 
 ---
 
@@ -136,10 +192,11 @@ sitenin her yerine (header, footer, iletişim sayfası, WhatsApp butonu) otomati
 Ana sayfadaki üç kutu ("%100 El Yapımı Üretim" vb.):
 
 ```ts
-  { value: '%100', label: 'El Yapımı Üretim' },
+  { value: '%100', label: 'El Yapımı Üretim', valueEn: '100%', labelEn: 'Handmade Production' },
 ```
 
 `value` büyük yazı, `label` altındaki küçük yazı. Üçten fazla veya az olabilir.
+`valueEn` / `labelEn` isteğe bağlıdır; yazılmazsa İngilizce sitede Türkçesi görünür.
 
 ---
 
@@ -177,6 +234,9 @@ Bunlar site mantığı; bozulursa sayfalar çalışmaz:
 - `src/app/features/` — sayfa kodları
 - `src/app/shared/` — ortak bileşenler
 - `src/app/core/services/` — üyelik, sipariş, yorum mantığı
+- `src/app/core/i18n/` — arayüz çevirileri (menü, buton, form metinleri). Bir arayüz metnini
+  değiştirmek isterseniz bana söyleyin: Türkçe ve İngilizce sözlükler birbirine bağlı,
+  birinden anahtar silinirse site derlenmez
 - `supabase/migrations/` — veritabanı kurulumu (her dosya bir kez çalıştırılır, tekrarlamayın)
 - `src/styles.css` — renkler ve yazı tipleri (değiştirmek isterseniz bana söyleyin,
   renk kontrastlarının erişilebilirlik standardını bozmaması gerekiyor)

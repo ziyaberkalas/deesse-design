@@ -3,6 +3,7 @@ import { Router, RouterLink } from '@angular/router';
 import { FormField, form, required, email as emailValidator } from '@angular/forms/signals';
 import { AuthService } from '../../../core/services/auth.service';
 import { isSupabaseConfigured } from '../../../core/config/supabase-config';
+import { LanguageService } from '../../../core/i18n/language.service';
 
 @Component({
   selector: 'app-login',
@@ -13,6 +14,8 @@ import { isSupabaseConfigured } from '../../../core/config/supabase-config';
 export class Login {
   private readonly auth = inject(AuthService);
   private readonly router = inject(Router);
+
+  protected readonly t = inject(LanguageService).t;
 
   /**
    * Giriş sonrası dönülecek adres — authGuard yönlendirirken ?redirect= ile ekler.
@@ -25,10 +28,12 @@ export class Login {
   protected readonly serverError = signal<string | null>(null);
 
   protected readonly model = signal({ email: '', password: '' });
+  // Mesajlar fonksiyon olarak veriliyor ki dil değiştiğinde yeniden hesaplansınlar
+  // (schema yalnızca bir kez kurulur, sabit metin eski dilde donup kalırdı).
   protected readonly loginForm = form(this.model, (schema) => {
-    required(schema.email, { message: 'E-posta adresinizi girin' });
-    emailValidator(schema.email, { message: 'Geçerli bir e-posta adresi girin' });
-    required(schema.password, { message: 'Şifrenizi girin' });
+    required(schema.email, { message: () => this.t().auth.emailRequired });
+    emailValidator(schema.email, { message: () => this.t().auth.emailInvalid });
+    required(schema.password, { message: () => this.t().auth.passwordRequired });
   });
 
   protected readonly canSubmit = computed(() => !this.submitting() && this.loginForm().valid());

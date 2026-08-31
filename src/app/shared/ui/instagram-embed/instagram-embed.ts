@@ -1,5 +1,6 @@
 import { Component, DestroyRef, ElementRef, afterNextRender, inject, input } from '@angular/core';
 import { InstagramEmbedLoaderService } from '../../../core/services/instagram-embed-loader.service';
+import { LanguageService } from '../../../core/i18n/language.service';
 
 @Component({
   selector: 'app-instagram-embed',
@@ -10,6 +11,9 @@ export class InstagramEmbed {
   private readonly loader = inject(InstagramEmbedLoaderService);
   private readonly elementRef = inject(ElementRef<HTMLElement>);
   private readonly destroyRef = inject(DestroyRef);
+  private readonly language = inject(LanguageService);
+
+  protected readonly t = this.language.t;
 
   readonly postUrl = input.required<string>();
 
@@ -27,7 +31,7 @@ export class InstagramEmbed {
     const labelIframe = (): boolean => {
       const iframe = host.querySelector('iframe');
       if (iframe && !iframe.title) {
-        iframe.title = 'Instagram gönderisi';
+        iframe.title = this.t().instagram.embedTitle;
       }
       return !!iframe;
     };

@@ -1,5 +1,6 @@
-import { Component, input } from '@angular/core';
+import { Component, inject, input } from '@angular/core';
 import { StockStatus } from '../../../core/models/supabase.model';
+import { LanguageService } from '../../../core/i18n/language.service';
 
 /**
  * Stok rozeti. 'unknown' (takip edilmiyor) ve 'in-stock' (yeterli stok) durumlarında hiçbir şey
@@ -9,9 +10,9 @@ import { StockStatus } from '../../../core/models/supabase.model';
   selector: 'app-stock-badge',
   template: `
     @if (status() === 'last-one') {
-      <span class="stock-badge last-one">Son ürün</span>
+      <span class="stock-badge last-one">{{ t().stock.lastOne }}</span>
     } @else if (status() === 'out-of-stock') {
-      <span class="stock-badge out">Stokta yok</span>
+      <span class="stock-badge out">{{ t().stock.outOfStock }}</span>
     }
   `,
   styles: `
@@ -37,5 +38,7 @@ import { StockStatus } from '../../../core/models/supabase.model';
   `,
 })
 export class StockBadge {
+  protected readonly t = inject(LanguageService).t;
+
   readonly status = input.required<StockStatus>();
 }

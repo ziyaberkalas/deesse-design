@@ -1,9 +1,6 @@
 <section class="admin-page">
-  <h1>Sipariş Yönetimi</h1>
-  <p class="intro">
-    Shopier'den gelen siparişleri buradan müşterinin hesabına ekleyin. Siparişi onayladığınızda
-    müşteri o ürüne "Onaylı Satın Alma" değerlendirmesi yazabilir hale gelir.
-  </p>
+  <h1>{{ t().adminOrders.title }}</h1>
+  <p class="intro">{{ t().adminOrders.intro }}</p>
 
   @if (errorMessage(); as error) {
     <p class="form-alert" role="alert">{{ error }}</p>
@@ -13,10 +10,10 @@
   }
 
   <section class="panel" aria-labelledby="new-order-heading">
-    <h2 id="new-order-heading">Yeni Sipariş Kaydet</h2>
+    <h2 id="new-order-heading">{{ t().adminOrders.newOrder }}</h2>
 
     <div class="form-field">
-      <label for="customer-search">Müşteri ara (telefon veya ad)</label>
+      <label for="customer-search">{{ t().adminOrders.customerSearchLabel }}</label>
       <div class="search-row">
         <input
           id="customer-search"
@@ -26,10 +23,10 @@
           (keydown.enter)="$event.preventDefault(); searchCustomers()"
         />
         <button type="button" class="btn-secondary" (click)="searchCustomers()" [disabled]="searching()">
-          {{ searching() ? 'Aranıyor...' : 'Ara' }}
+          {{ searching() ? t().adminOrders.searching : t().adminOrders.search }}
         </button>
       </div>
-      <span class="hint">Müşterinin önce siteye kayıt olmuş olması gerekir.</span>
+      <span class="hint">{{ t().adminOrders.customerHint }}</span>
     </div>
 
     @if (customerResults().length > 0) {
@@ -37,8 +34,8 @@
         @for (customer of customerResults(); track customer.id) {
           <li>
             <button type="button" class="customer-option" (click)="selectCustomer(customer)">
-              <span class="customer-name">{{ customer.display_name ?? 'İsimsiz' }}</span>
-              <span class="customer-phone">{{ customer.phone ?? '—' }}</span>
+              <span class="customer-name">{{ customer.display_name ?? t().adminOrders.unnamed }}</span>
+              <span class="customer-phone">{{ customer.phone ?? t().common.dash }}</span>
             </button>
           </li>
         }
@@ -47,13 +44,15 @@
 
     @if (selectedCustomer(); as customer) {
       <p class="selected-customer" role="status">
-        Seçili müşteri: <strong>{{ customer.display_name ?? 'İsimsiz' }}</strong> ({{ customer.phone ?? '—' }})
+        {{ t().adminOrders.selectedCustomer }}
+        <strong>{{ customer.display_name ?? t().adminOrders.unnamed }}</strong>
+        ({{ customer.phone ?? t().common.dash }})
       </p>
 
       <div class="form-field">
-        <label for="order-product">Ürün</label>
+        <label for="order-product">{{ t().adminOrders.product }}</label>
         <select id="order-product" [value]="selectedProductId()" (change)="onProductChange($event)">
-          <option value="">Ürün seçin...</option>
+          <option value="">{{ t().adminOrders.selectProduct }}</option>
           @for (product of products(); track product.id) {
             <option [value]="product.id">{{ product.name }}</option>
           }
@@ -61,39 +60,39 @@
       </div>
 
       <button type="button" class="btn-primary" (click)="createOrder()" [disabled]="!canCreate()">
-        {{ saving() ? 'Kaydediliyor...' : 'Siparişi Kaydet' }}
+        {{ saving() ? t().adminOrders.saving : t().adminOrders.saveOrder }}
       </button>
     }
   </section>
 
   <section class="panel" aria-labelledby="all-orders-heading">
-    <h2 id="all-orders-heading">Tüm Siparişler</h2>
+    <h2 id="all-orders-heading">{{ t().adminOrders.allOrders }}</h2>
 
     @if (ordersResource.isLoading()) {
-      <p class="muted" role="status">Siparişler yükleniyor...</p>
+      <p class="muted" role="status">{{ t().adminOrders.loadingOrders }}</p>
     } @else if (ordersResource.error()) {
-      <p class="form-alert" role="alert">Siparişler yüklenemedi.</p>
+      <p class="form-alert" role="alert">{{ t().adminOrders.ordersError }}</p>
     } @else if (ordersResource.value()?.length) {
       <div class="table-scroll">
         <table>
-          <caption class="visually-hidden">Kayıtlı tüm siparişler ve durumları</caption>
+          <caption class="visually-hidden">{{ t().adminOrders.tableCaption }}</caption>
           <thead>
             <tr>
-              <th scope="col">Müşteri</th>
-              <th scope="col">Telefon</th>
-              <th scope="col">Ürün</th>
-              <th scope="col">Tarih</th>
-              <th scope="col">Durum</th>
-              <th scope="col">İşlem</th>
+              <th scope="col">{{ t().adminOrders.colCustomer }}</th>
+              <th scope="col">{{ t().adminOrders.colPhone }}</th>
+              <th scope="col">{{ t().adminOrders.colProduct }}</th>
+              <th scope="col">{{ t().adminOrders.colDate }}</th>
+              <th scope="col">{{ t().adminOrders.colStatus }}</th>
+              <th scope="col">{{ t().adminOrders.colAction }}</th>
             </tr>
           </thead>
           <tbody>
             @for (order of ordersResource.value(); track order.id) {
               <tr>
-                <td>{{ order.profiles?.display_name ?? 'İsimsiz' }}</td>
-                <td>{{ order.profiles?.phone ?? '—' }}</td>
+                <td>{{ order.profiles?.display_name ?? t().adminOrders.unnamed }}</td>
+                <td>{{ order.profiles?.phone ?? t().common.dash }}</td>
                 <td>{{ order.product_name }}</td>
-                <td>{{ order.created_at | date: 'short' }}</td>
+                <td>{{ order.created_at | date: 'short' : undefined : locale() }}</td>
                 <td>
                   <span class="status" [class]="'status-' + order.status">{{ statusLabel(order.status) }}</span>
                 </td>
@@ -103,12 +102,12 @@
                       type="button"
                       class="btn-secondary"
                       (click)="confirmOrder(order.id)"
-                      [attr.aria-label]="order.product_name + ' siparişini onayla'"
+                      [attr.aria-label]="t().adminOrders.confirmLabel(order.product_name)"
                     >
-                      Onayla
+                      {{ t().adminOrders.confirm }}
                     </button>
                   } @else {
-                    <span class="muted">—</span>
+                    <span class="muted">{{ t().common.dash }}</span>
                   }
                 </td>
               </tr>
@@ -117,7 +116,7 @@
         </table>
       </div>
     } @else {
-      <p class="muted">Henüz kayıtlı sipariş yok.</p>
+      <p class="muted">{{ t().adminOrders.noOrders }}</p>
     }
   </section>
 </section>

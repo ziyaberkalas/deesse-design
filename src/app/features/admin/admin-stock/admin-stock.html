@@ -1,31 +1,26 @@
 <section class="admin-page">
-  <h1>Stok Yönetimi</h1>
+  <h1>{{ t().adminStock.title }}</h1>
   <p class="intro">
-    Satış olduğunda stoğu buradan düşürün. Stok <strong>1</strong> olduğunda ürün kartında
-    "Son ürün", <strong>0</strong> olduğunda "Stokta yok" görünür ve satın alma butonu
-    WhatsApp'a dönüşür.
+    {{ t().adminStock.intro1 }} <strong>1</strong> {{ t().adminStock.intro2 }} <strong>0</strong>
+    {{ t().adminStock.intro3 }}
   </p>
-  <p class="intro note">
-    Takip edilmeyen ürünlerde hiçbir rozet çıkmaz ve satın alma normal çalışır — yani stok
-    takibini istediğiniz ürünlerde açabilirsiniz. Şu an {{ trackedCount() }} / {{ rows().length }}
-    ürün takip ediliyor.
-  </p>
+  <p class="intro note">{{ t().adminStock.trackingNote(trackedCount(), rows().length) }}</p>
 
   @if (errorMessage(); as error) {
     <p class="form-alert" role="alert">{{ error }}</p>
   }
 
   @if (isLoading()) {
-    <p class="muted" role="status">Stok bilgileri yükleniyor...</p>
+    <p class="muted" role="status">{{ t().adminStock.loading }}</p>
   } @else {
     <div class="table-scroll">
       <table>
-        <caption class="visually-hidden">Ürünlerin stok adetleri ve düzenleme işlemleri</caption>
+        <caption class="visually-hidden">{{ t().adminStock.tableCaption }}</caption>
         <thead>
           <tr>
-            <th scope="col">Ürün</th>
-            <th scope="col">Stok</th>
-            <th scope="col">İşlem</th>
+            <th scope="col">{{ t().adminStock.colProduct }}</th>
+            <th scope="col">{{ t().adminStock.colStock }}</th>
+            <th scope="col">{{ t().adminStock.colAction }}</th>
           </tr>
         </thead>
         <tbody>
@@ -34,10 +29,10 @@
               <th scope="row" class="product-cell">{{ row.product.name }}</th>
               <td>
                 @if (row.stock === undefined) {
-                  <span class="muted">Takip edilmiyor</span>
+                  <span class="muted">{{ t().adminStock.notTracked }}</span>
                 } @else {
                   <label class="visually-hidden" [for]="'stok-' + row.product.id">
-                    {{ row.product.name }} stok adedi
+                    {{ t().adminStock.stockCountLabel(row.product.name) }}
                   </label>
                   <input
                     class="stock-input"
@@ -60,14 +55,14 @@
                       [disabled]="busyProductId() === row.product.id"
                       (click)="startTracking(row.product.id)"
                     >
-                      Takibe al
+                      {{ t().adminStock.startTracking }}
                     </button>
                   } @else {
                     <button
                       type="button"
                       class="step-btn"
                       [disabled]="busyProductId() === row.product.id || row.stock === 0"
-                      [attr.aria-label]="row.product.name + ' stoğunu bir azalt'"
+                      [attr.aria-label]="t().adminStock.decreaseLabel(row.product.name)"
                       (click)="adjust(row.product.id, -1)"
                     >
                       −
@@ -76,7 +71,7 @@
                       type="button"
                       class="step-btn"
                       [disabled]="busyProductId() === row.product.id"
-                      [attr.aria-label]="row.product.name + ' stoğunu bir artır'"
+                      [attr.aria-label]="t().adminStock.increaseLabel(row.product.name)"
                       (click)="adjust(row.product.id, 1)"
                     >
                       +
@@ -87,7 +82,7 @@
                       [disabled]="busyProductId() === row.product.id"
                       (click)="stopTracking(row.product.id)"
                     >
-                      Takipten çıkar
+                      {{ t().adminStock.stopTracking }}
                     </button>
                   }
                 </div>

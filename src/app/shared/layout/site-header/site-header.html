@@ -9,18 +9,18 @@
       [attr.aria-expanded]="menuOpen()"
       aria-controls="primary-nav"
     >
-      <span class="visually-hidden">Menüyü {{ menuOpen() ? 'kapat' : 'aç' }}</span>
+      <span class="visually-hidden">{{ menuOpen() ? t().nav.closeMenu : t().nav.openMenu }}</span>
       <span aria-hidden="true">☰</span>
     </button>
 
-    <nav id="primary-nav" class="nav" [class.open]="menuOpen()" aria-label="Ana menü">
+    <nav id="primary-nav" class="nav" [class.open]="menuOpen()" [attr.aria-label]="t().nav.mainMenu">
       <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="closeMenu()">
-        Ana Sayfa
+        {{ t().nav.home }}
       </a>
-      <a routerLink="/urunler" routerLinkActive="active" (click)="closeMenu()">Ürünler</a>
-      <a routerLink="/iletisim" routerLinkActive="active" (click)="closeMenu()">İletişim</a>
+      <a routerLink="/urunler" routerLinkActive="active" (click)="closeMenu()">{{ t().nav.products }}</a>
+      <a routerLink="/iletisim" routerLinkActive="active" (click)="closeMenu()">{{ t().nav.contact }}</a>
       <a class="favorites-link" routerLink="/favoriler" routerLinkActive="active" (click)="closeMenu()">
-        Favorilerim
+        {{ t().nav.favorites }}
         @if (favorites.count() > 0) {
           <span class="badge">{{ favorites.count() }}</span>
         }
@@ -29,15 +29,15 @@
            "Giriş Yap" gösterilmesini önler. -->
       @if (auth.ready()) {
         @if (auth.isLoggedIn()) {
-          <a routerLink="/hesabim" routerLinkActive="active" (click)="closeMenu()">Hesabım</a>
+          <a routerLink="/hesabim" routerLinkActive="active" (click)="closeMenu()">{{ t().nav.account }}</a>
           @if (auth.isAdmin()) {
             <a routerLink="/yonetim/siparisler" routerLinkActive="active" (click)="closeMenu()">
-              Siparişler
+              {{ t().nav.orders }}
             </a>
-            <a routerLink="/yonetim/stok" routerLinkActive="active" (click)="closeMenu()">Stok</a>
+            <a routerLink="/yonetim/stok" routerLinkActive="active" (click)="closeMenu()">{{ t().nav.stock }}</a>
           }
         } @else {
-          <a routerLink="/giris" routerLinkActive="active" (click)="closeMenu()">Giriş Yap</a>
+          <a routerLink="/giris" routerLinkActive="active" (click)="closeMenu()">{{ t().nav.login }}</a>
         }
       }
       <a
@@ -45,7 +45,7 @@
         [href]="siteConfig.instagram.url"
         target="_blank"
         rel="noopener noreferrer"
-        aria-label="Instagram'da takip edin"
+        [attr.aria-label]="t().nav.instagramFollow"
       >
         <svg aria-hidden="true" viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
           <path
@@ -53,11 +53,22 @@
           />
         </svg>
       </a>
+      <!-- Dil düğmesi: üzerinde HEDEF dilin kodu yazar (Türkçedeyken "EN"), aria-label ise
+           eylemi o dilin kendisinde anlatır -- kullanıcı hangi dile geçeceğini okuyabilsin diye. -->
+      <button
+        type="button"
+        class="lang-toggle"
+        (click)="language.toggle()"
+        [attr.aria-label]="t().nav.switchLanguage"
+        [attr.lang]="language.lang() === 'tr' ? 'en' : 'tr'"
+      >
+        {{ t().nav.languageCode }}
+      </button>
       <button
         type="button"
         class="theme-toggle"
         (click)="theme.toggle()"
-        [attr.aria-label]="theme.effectiveTheme() === 'dark' ? 'Aydınlık moda geç' : 'Karanlık moda geç'"
+        [attr.aria-label]="theme.effectiveTheme() === 'dark' ? t().nav.toLightMode : t().nav.toDarkMode"
       >
         @if (theme.effectiveTheme() === 'dark') {
           <svg aria-hidden="true" viewBox="0 0 24 24" width="18" height="18" fill="currentColor">

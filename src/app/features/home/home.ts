@@ -1,6 +1,7 @@
-import { Component, inject } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { ProductsService } from '../../core/services/products.service';
+import { LanguageService } from '../../core/i18n/language.service';
 import { SITE_CONFIG } from '../../core/config/site-config';
 import { INSTAGRAM_TEASER_POSTS } from '../../core/data/instagram-posts.data';
 import { TRUST_STATS } from '../../core/data/stats.data';
@@ -17,9 +18,23 @@ import { ScrollReveal } from '../../shared/ui/scroll-reveal/scroll-reveal';
 })
 export class Home {
   private readonly productsService = inject(ProductsService);
+  private readonly language = inject(LanguageService);
 
+  protected readonly t = this.language.t;
   protected readonly siteConfig = SITE_CONFIG;
   protected readonly featuredProducts = this.productsService.featuredProducts;
   protected readonly instagramPosts = INSTAGRAM_TEASER_POSTS;
-  protected readonly stats = TRUST_STATS;
+
+  protected readonly tagline = computed(() =>
+    this.language.lang() === 'en' ? SITE_CONFIG.taglineEn : SITE_CONFIG.tagline,
+  );
+
+  /** İngilizce karşılığı girilmemiş rakamlar Türkçesiyle görünür. */
+  protected readonly stats = computed(() => {
+    const english = this.language.lang() === 'en';
+    return TRUST_STATS.map((stat) => ({
+      value: english ? stat.valueEn ?? stat.value : stat.value,
+      label: english ? stat.labelEn ?? stat.label : stat.label,
+    }));
+  });
 }

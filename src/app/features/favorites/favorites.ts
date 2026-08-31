@@ -3,6 +3,7 @@ import { RouterLink } from '@angular/router';
 import { ProductsService } from '../../core/services/products.service';
 import { FavoritesService } from '../../core/services/favorites.service';
 import { ProductCard } from '../../shared/ui/product-card/product-card';
+import { LanguageService } from '../../core/i18n/language.service';
 
 @Component({
   selector: 'app-favorites',
@@ -13,6 +14,8 @@ import { ProductCard } from '../../shared/ui/product-card/product-card';
 export class Favorites {
   private readonly productsService = inject(ProductsService);
   private readonly favorites = inject(FavoritesService);
+
+  protected readonly t = inject(LanguageService).t;
 
   protected readonly favoriteProducts = computed(() => {
     const ids = this.favorites.favoriteIds();

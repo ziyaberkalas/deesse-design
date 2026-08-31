@@ -1,27 +1,27 @@
 <section class="product-list-page">
-  <h1>Ürünler</h1>
+  <h1>{{ t().productList.title }}</h1>
 
   <div class="toolbar">
     <div class="search-field">
-      <label class="visually-hidden" for="product-search">Ürün ara</label>
+      <label class="visually-hidden" for="product-search">{{ t().productList.searchLabel }}</label>
       <input
         id="product-search"
         type="search"
-        placeholder="Ürün adı veya açıklamada ara..."
+        [placeholder]="t().productList.searchPlaceholder"
         [value]="searchQuery()"
         (input)="onSearchInput($event)"
       />
     </div>
   </div>
 
-  <div class="filters" role="group" aria-label="Kategoriye göre filtrele">
+  <div class="filters" role="group" [attr.aria-label]="t().productList.filterByCategory">
     <button
       type="button"
       class="filter-chip"
       [attr.aria-pressed]="selectedCategory() === null"
       (click)="selectCategory(null)"
     >
-      Tümü
+      {{ t().productList.all }}
     </button>
     @for (category of categories(); track category.id) {
       <button
@@ -42,6 +42,6 @@
       }
     </div>
   } @else {
-    <p class="empty">Aramanıza veya seçtiğiniz filtrelere uyan ürün bulunamadı.</p>
+    <p class="empty">{{ t().productList.noResults }}</p>
   }
 </section>

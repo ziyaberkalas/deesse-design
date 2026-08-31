@@ -1,9 +1,10 @@
-import { Component, computed, inject, input, resource, signal } from '@angular/core';
+import { Component, computed, effect, inject, input, resource, signal } from '@angular/core';
 import { NgOptimizedImage, CurrencyPipe } from '@angular/common';
-import { RouterLink } from '@angular/router';
+import { RouterLink, TitleStrategy } from '@angular/router';
+import { TranslatedTitleStrategy } from '../../../core/i18n/translated-title.strategy';
 import { FormField, form, minLength, required } from '@angular/forms/signals';
 import { ProductsService } from '../../../core/services/products.service';
-import { CATEGORY_LABELS } from '../../../core/data/products.data';
+import { LanguageService } from '../../../core/i18n/language.service';
 import { ShopierBuyButton } from '../../../shared/ui/shopier-buy-button/shopier-buy-button';
 import { WhatsappCtaButton } from '../../../shared/ui/whatsapp-cta-button/whatsapp-cta-button';
 import { StockBadge } from '../../../shared/ui/stock-badge/stock-badge';
@@ -37,15 +38,29 @@ export class ProductDetail {
   private readonly favorites = inject(FavoritesService);
   private readonly stock = inject(StockService);
   private readonly reviewsService = inject(ReviewsService);
+  private readonly language = inject(LanguageService);
   protected readonly auth = inject(AuthService);
+
+  protected readonly t = this.language.t;
+  protected readonly locale = this.language.locale;
+  protected readonly currencyDisplay = this.language.currencyDisplay;
 
   readonly id = input.required<string>();
 
   protected readonly product = computed(() => this.productsService.products().find((p) => p.id === this.id()));
 
+  constructor() {
+    // Sekme başlığı ürünün adı olur ("Elegance | Déesse Design"). Ad dile göre değişebildiği
+    // için effect: dil değiştirildiğinde başlık da güncellenir.
+    const titleStrategy = inject(TitleStrategy);
+    if (titleStrategy instanceof TranslatedTitleStrategy) {
+      effect(() => titleStrategy.setCustomTitle(this.product()?.name ?? null));
+    }
+  }
+
   protected readonly categoryLabel = computed(() => {
     const product = this.product();
-    return product ? CATEGORY_LABELS[product.categoryId] ?? product.categoryId : '';
+    return product ? this.productsService.categoryLabel(product.categoryId) : '';
   });
 
   protected readonly selectedImageIndex = signal(0);
@@ -58,8 +73,8 @@ export class ProductDetail {
   protected readonly isOutOfStock = computed(() => this.stockStatus() === 'out-of-stock');
 
   /** Stok tükendiğinde WhatsApp mesajını ürün adıyla önden doldurur. */
-  protected readonly restockMessage = computed(
-    () => `Merhaba, "${this.product()?.name ?? ''}" ürünü stokta yok. Tekrar üretilecek mi?`,
+  protected readonly restockMessage = computed(() =>
+    this.t().productDetail.restockMessage(this.product()?.name ?? ''),
   );
 
   protected readonly isFavorite = computed(() => {
@@ -105,9 +120,12 @@ export class ProductDetail {
   // --- Yorum formu ---
 
   protected readonly reviewModel = signal({ rating: 5, comment: '' });
+  // Mesajlar string değil fonksiyon: schema yalnızca bir kez kurulur, dolayısıyla sabit bir
+  // metin kullanılsaydı dil değiştirildiğinde eski dilde kalırdı. Fonksiyon her doğrulamada
+  // t() sinyalini okuduğu için mesaj aktif dile göre yeniden hesaplanır.
   protected readonly reviewForm = form(this.reviewModel, (schema) => {
-    required(schema.comment, { message: 'Lütfen bir değerlendirme yazın' });
-    minLength(schema.comment, 10, { message: 'Değerlendirmeniz en az 10 karakter olmalı' });
+    required(schema.comment, { message: () => this.t().review.commentRequired });
+    minLength(schema.comment, 10, { message: () => this.t().review.commentMinLength });
   });
 
   protected readonly submitting = signal(false);

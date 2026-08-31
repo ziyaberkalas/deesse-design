@@ -1,6 +1,8 @@
 export const SITE_CONFIG = {
   siteName: 'Déesse Design',
   tagline: 'Kadınların zamansız zarafetinden ilham alan el yapımı çantalar',
+  /** Markanın kendi Instagram biyografisindeki İngilizce ifade. */
+  taglineEn: 'Exquisitely handcrafted pieces inspired by the timeless elegance of women',
   designer: 'Tuğba Ceylan',
 
   whatsapp: {

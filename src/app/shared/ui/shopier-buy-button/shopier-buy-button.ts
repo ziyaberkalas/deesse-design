@@ -1,6 +1,7 @@
-import { Component, computed, input } from '@angular/core';
+import { Component, computed, inject, input } from '@angular/core';
 import { Product } from '../../../core/models/product.model';
 import { SITE_CONFIG } from '../../../core/config/site-config';
+import { LanguageService } from '../../../core/i18n/language.service';
 
 /**
  * Satın alma butonu. Satış Shopier üzerinden yürüdüğü için ürün detayında birincil eylem budur;
@@ -15,8 +16,13 @@ import { SITE_CONFIG } from '../../../core/config/site-config';
   styleUrl: './shopier-buy-button.css',
 })
 export class ShopierBuyButton {
+  private readonly language = inject(LanguageService);
+
   readonly product = input<Product | undefined>(undefined);
-  readonly label = input<string>('Shopier’den Satın Al');
+  /** Belirtilmezse aktif dildeki varsayılan metin kullanılır. */
+  readonly label = input<string | undefined>(undefined);
+
+  protected readonly labelText = computed(() => this.label() ?? this.language.t().shopier.buy);
 
   protected readonly href = computed(() => this.product()?.shopierUrl || SITE_CONFIG.shopier.shopUrl);
 }

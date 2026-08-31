@@ -2,6 +2,7 @@ import { Component, computed, inject, signal } from '@angular/core';
 import { ProductsService } from '../../../core/services/products.service';
 import { StockService } from '../../../core/services/stock.service';
 import { Product } from '../../../core/models/product.model';
+import { LanguageService } from '../../../core/i18n/language.service';
 
 interface StockRow {
   product: Product;
@@ -17,6 +18,7 @@ export class AdminStock {
   private readonly productsService = inject(ProductsService);
   private readonly stockService = inject(StockService);
 
+  protected readonly t = inject(LanguageService).t;
   protected readonly isLoading = this.stockService.isLoading;
   protected readonly errorMessage = signal<string | null>(null);
   /** Kaydetme sırasında yalnızca ilgili satırın butonlarını kilitlemek için. */
@@ -59,7 +61,7 @@ export class AdminStock {
     try {
       await action();
     } catch (error) {
-      this.errorMessage.set(error instanceof Error ? error.message : 'İşlem başarısız oldu.');
+      this.errorMessage.set(error instanceof Error ? error.message : this.t().adminStock.actionFailed);
     } finally {
       this.busyProductId.set(null);
     }

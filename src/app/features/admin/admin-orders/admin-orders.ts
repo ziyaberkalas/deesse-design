@@ -3,12 +3,7 @@ import { DatePipe } from '@angular/common';
 import { OrdersService } from '../../../core/services/orders.service';
 import { ProductsService } from '../../../core/services/products.service';
 import { OrderStatus, Profile } from '../../../core/models/supabase.model';
-
-const STATUS_LABELS: Record<OrderStatus, string> = {
-  pending: 'Onay Bekliyor',
-  confirmed: 'Onaylandı',
-  cancelled: 'İptal Edildi',
-};
+import { LanguageService } from '../../../core/i18n/language.service';
 
 @Component({
   selector: 'app-admin-orders',
@@ -19,6 +14,10 @@ const STATUS_LABELS: Record<OrderStatus, string> = {
 export class AdminOrders {
   private readonly ordersService = inject(OrdersService);
   private readonly productsService = inject(ProductsService);
+  private readonly language = inject(LanguageService);
+
+  protected readonly t = this.language.t;
+  protected readonly locale = this.language.locale;
 
   protected readonly products = this.productsService.products;
 
@@ -43,7 +42,7 @@ export class AdminOrders {
   );
 
   protected statusLabel(status: OrderStatus): string {
-    return STATUS_LABELS[status];
+    return this.t().orderStatus[status];
   }
 
   protected onQueryInput(event: Event): void {
@@ -57,7 +56,7 @@ export class AdminOrders {
   protected async searchCustomers(): Promise<void> {
     const query = this.customerQuery().trim();
     if (query.length < 2) {
-      this.errorMessage.set('Aramak için en az 2 karakter girin.');
+      this.errorMessage.set(this.t().adminOrders.minTwoChars);
       return;
     }
     this.searching.set(true);
@@ -65,7 +64,7 @@ export class AdminOrders {
     try {
       this.customerResults.set(await this.ordersService.searchCustomers(query));
     } catch (error) {
-      this.errorMessage.set(error instanceof Error ? error.message : 'Müşteri araması başarısız oldu.');
+      this.errorMessage.set(error instanceof Error ? error.message : this.t().adminOrders.searchFailed);
     } finally {
       this.searching.set(false);
     }
@@ -88,11 +87,16 @@ export class AdminOrders {
     this.successMessage.set(null);
     try {
       await this.ordersService.createOrderForCustomer(customer.id, product.id, product.name);
-      this.successMessage.set(`"${product.name}" siparişi ${customer.display_name ?? 'müşteriye'} eklendi.`);
+      this.successMessage.set(
+        this.t().adminOrders.createdMessage(
+          product.name,
+          customer.display_name ?? this.t().adminOrders.toCustomerFallback,
+        ),
+      );
       this.selectedProductId.set('');
       this.ordersResource.reload();
     } catch (error) {
-      this.errorMessage.set(error instanceof Error ? error.message : 'Sipariş oluşturulamadı.');
+      this.errorMessage.set(error instanceof Error ? error.message : this.t().adminOrders.createFailed);
     } finally {
       this.saving.set(false);
     }
@@ -104,7 +108,7 @@ export class AdminOrders {
       await this.ordersService.confirmOrder(orderId);
       this.ordersResource.reload();
     } catch (error) {
-      this.errorMessage.set(error instanceof Error ? error.message : 'Sipariş onaylanamadı.');
+      this.errorMessage.set(error instanceof Error ? error.message : this.t().adminOrders.confirmFailed);
     }
   }
 }

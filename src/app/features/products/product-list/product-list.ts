@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ProductsService } from '../../../core/services/products.service';
 import { ProductCard } from '../../../shared/ui/product-card/product-card';
 import { ScrollReveal } from '../../../shared/ui/scroll-reveal/scroll-reveal';
+import { LanguageService } from '../../../core/i18n/language.service';
 
 @Component({
   selector: 'app-product-list',
@@ -15,6 +16,9 @@ export class ProductList {
   private readonly productsService = inject(ProductsService);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
+  private readonly language = inject(LanguageService);
+
+  protected readonly t = this.language.t;
 
   private readonly queryParamMap = toSignal(this.route.queryParamMap, { requireSync: true });
 
@@ -27,7 +31,10 @@ export class ProductList {
 
   protected readonly filteredProducts = computed(() => {
     const category = this.selectedCategory();
-    const query = this.searchQuery().trim().toLocaleLowerCase('tr');
+    // Küçük harfe çevirme aktif dilin kuralıyla yapılır: Türkçe kuralı "I" harfini "ı" yapar,
+    // bu da İngilizce metinde arama yaparken eşleşmeyi bozardı.
+    const locale = this.language.lang();
+    const query = this.searchQuery().trim().toLocaleLowerCase(locale);
 
     return this.productsService.products().filter((product) => {
       if (category && product.categoryId !== category) {
@@ -37,8 +44,8 @@ export class ProductList {
         return true;
       }
       return (
-        product.name.toLocaleLowerCase('tr').includes(query) ||
-        product.shortDescription.toLocaleLowerCase('tr').includes(query)
+        product.name.toLocaleLowerCase(locale).includes(query) ||
+        product.shortDescription.toLocaleLowerCase(locale).includes(query)
       );
     });
   });

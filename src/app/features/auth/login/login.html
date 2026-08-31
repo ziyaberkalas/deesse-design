@@ -1,11 +1,8 @@
 <section class="auth-page">
-  <h1>Giriş Yap</h1>
+  <h1>{{ t().auth.loginTitle }}</h1>
 
   @if (!configured) {
-    <p class="form-notice">
-      Üyelik sistemi henüz yapılandırılmadı. Site yöneticisinin Supabase bağlantı bilgilerini
-      girmesi gerekiyor.
-    </p>
+    <p class="form-notice">{{ t().auth.notConfigured }}</p>
   }
 
   @if (serverError(); as error) {
@@ -14,7 +11,7 @@
 
   <form (submit)="$event.preventDefault(); onSubmit()" novalidate>
     <div class="form-field">
-      <label for="login-email">E-posta</label>
+      <label for="login-email">{{ t().auth.email }}</label>
       <input id="login-email" type="email" autocomplete="email" [formField]="loginForm.email" />
       @if (loginForm.email().touched() && loginForm.email().invalid()) {
         @for (error of loginForm.email().errors(); track $index) {
@@ -24,7 +21,7 @@
     </div>
 
     <div class="form-field">
-      <label for="login-password">Şifre</label>
+      <label for="login-password">{{ t().auth.password }}</label>
       <input
         id="login-password"
         type="password"
@@ -39,9 +36,9 @@
     </div>
 
     <button type="submit" class="btn-primary" [disabled]="!canSubmit()">
-      {{ submitting() ? 'Giriş yapılıyor...' : 'Giriş Yap' }}
+      {{ submitting() ? t().auth.loggingIn : t().auth.loginTitle }}
     </button>
   </form>
 
-  <p class="alt-action">Hesabınız yok mu? <a routerLink="/kayit">Kayıt olun</a></p>
+  <p class="alt-action">{{ t().auth.noAccount }} <a routerLink="/kayit">{{ t().auth.signupLink }}</a></p>
 </section>

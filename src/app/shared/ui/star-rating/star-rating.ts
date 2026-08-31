@@ -1,4 +1,5 @@
-import { Component, computed, input } from '@angular/core';
+import { Component, computed, inject, input } from '@angular/core';
+import { LanguageService } from '../../../core/i18n/language.service';
 
 @Component({
   selector: 'app-star-rating',
@@ -36,6 +37,8 @@ import { Component, computed, input } from '@angular/core';
   `,
 })
 export class StarRating {
+  private readonly language = inject(LanguageService);
+
   readonly rating = input.required<number>();
   readonly reviewCount = input<number>(0);
 
@@ -45,9 +48,13 @@ export class StarRating {
   });
 
   protected readonly ratingLabel = computed(() => {
-    const rating = this.rating();
+    const t = this.language.t();
     const count = this.reviewCount();
-    const ratingText = `${rating.toFixed(1)} / 5 yıldız`;
-    return count > 0 ? `${ratingText} (${count} değerlendirme)` : ratingText;
+    // Ondalık ayıracı dile göre değişir (Türkçe "4,5" — İngilizce "4.5").
+    const rating = this.rating().toLocaleString(this.language.locale(), {
+      minimumFractionDigits: 1,
+      maximumFractionDigits: 1,
+    });
+    return count > 0 ? t.review.ratingLabelWithCount(rating, count) : t.review.ratingLabel(rating);
   });
 }

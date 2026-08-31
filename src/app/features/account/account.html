@@ -1,27 +1,25 @@
 <section class="account-page">
   <header class="account-header">
     <div>
-      <h1>Hesabım</h1>
-      <p class="greeting">Merhaba, {{ displayName() }}</p>
+      <h1>{{ t().account.title }}</h1>
+      <p class="greeting">{{ t().account.greeting(displayName()) }}</p>
     </div>
-    <button type="button" class="btn-secondary" (click)="signOut()">Çıkış Yap</button>
+    <button type="button" class="btn-secondary" (click)="signOut()">{{ t().account.signOut }}</button>
   </header>
 
   @if (isAdmin()) {
     <p class="form-notice">
-      Yönetici hesabıyla giriş yaptınız.
-      <a routerLink="/yonetim/siparisler">Sipariş yönetimine gidin</a>
+      {{ t().account.adminNotice }}
+      <a routerLink="/yonetim/siparisler">{{ t().account.adminLink }}</a>
     </p>
   }
 
-  <h2>Siparişlerim</h2>
+  <h2>{{ t().account.myOrders }}</h2>
 
   @if (ordersResource.isLoading()) {
-    <p class="muted" role="status">Siparişleriniz yükleniyor...</p>
+    <p class="muted" role="status">{{ t().account.loadingOrders }}</p>
   } @else if (ordersResource.error()) {
-    <p class="form-alert" role="alert">
-      Siparişleriniz yüklenemedi. Bağlantınızı kontrol edip sayfayı yenileyin.
-    </p>
+    <p class="form-alert" role="alert">{{ t().account.ordersError }}</p>
   } @else if (ordersResource.value()?.length) {
     <ul class="order-list">
       @for (order of ordersResource.value(); track order.id) {
@@ -29,22 +27,19 @@
           <div class="order-main">
             <a class="order-product" [routerLink]="['/urunler', order.product_id]">{{ order.product_name }}</a>
             <time class="order-date" [attr.datetime]="order.created_at">
-              {{ order.created_at | date: 'longDate' }}
+              {{ order.created_at | date: 'longDate' : undefined : locale() }}
             </time>
           </div>
           <span class="status" [class]="'status-' + order.status">{{ statusLabel(order.status) }}</span>
         </li>
       }
     </ul>
-    <p class="muted note">
-      Onaylanan siparişleriniz için ilgili ürün sayfasından değerlendirme yazabilirsiniz.
-    </p>
+    <p class="muted note">{{ t().account.confirmedNote }}</p>
   } @else {
     <div class="empty">
-      <p>Henüz kayıtlı siparişiniz yok.</p>
+      <p>{{ t().account.noOrders }}</p>
       <p class="muted">
-        Shopier'den verdiğiniz siparişler, hazırlandıktan sonra atölyemiz tarafından hesabınıza
-        işlenir. <a routerLink="/urunler">Koleksiyona göz atın</a>
+        {{ t().account.noOrdersHint }} <a routerLink="/urunler">{{ t().account.browseCollection }}</a>
       </p>
     </div>
   }
